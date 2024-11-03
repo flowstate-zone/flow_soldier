@@ -2,15 +2,21 @@ import torch
 import numpy as np
 import os
 from utils.reranking import re_ranking
+import logging
+
+logger = logging.getLogger("transreid.train")
 
 
 def euclidean_distance(qf, gf):
     m = qf.shape[0]
     n = gf.shape[0]
-    dist_mat = torch.pow(qf, 2).sum(dim=1, keepdim=True).expand(m, n) + \
-               torch.pow(gf, 2).sum(dim=1, keepdim=True).expand(n, m).t()
+    dist_mat = (
+        torch.pow(qf, 2).sum(dim=1, keepdim=True).expand(m, n)
+        + torch.pow(gf, 2).sum(dim=1, keepdim=True).expand(n, m).t()
+    )
     dist_mat.addmm_(1, -2, qf, gf.t())
     return dist_mat.cpu().numpy()
+
 
 def cosine_similarity(qf, gf):
     epsilon = 0.00001
@@ -27,8 +33,8 @@ def cosine_similarity(qf, gf):
 
 def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
     """Evaluation with market1501 metric
-        Key: for each query identity, its gallery images from the same camera view are discarded.
-        """
+    Key: for each query identity, its gallery images from the same camera view are discarded.
+    """
     num_q, num_g = distmat.shape
     # distmat g
     #    q    1 3 2 4
@@ -43,7 +49,7 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
     # compute cmc curve for each query
     all_cmc = []
     all_AP = []
-    num_valid_q = 0.  # number of valid query
+    num_valid_q = 0.0  # number of valid query
     for q_idx in range(num_q):
         # get query pid and camid
         q_pid = q_pids[q_idx]
@@ -65,7 +71,7 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
         cmc[cmc > 1] = 1
 
         all_cmc.append(cmc[:max_rank])
-        num_valid_q += 1.
+        num_valid_q += 1.0
 
         # compute average precision
         # reference: https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)#Average_precision
@@ -86,13 +92,23 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
     return all_cmc, mAP
 
 
-class R1_mAP_eval():
-    def __init__(self, num_query, max_rank=50, feat_norm=True, reranking=False):
+class R1_mAP_eval:
+    def __init__(
+        self,
+        num_query,
+        max_rank=50,
+        feat_norm=True,
+        reranking=False,
+        cam_path_to_id_map=None,
+    ):
         super(R1_mAP_eval, self).__init__()
         self.num_query = num_query
         self.max_rank = max_rank
         self.feat_norm = feat_norm
         self.reranking = reranking
+        self.cam_path_to_id_map = cam_path_to_id_map
+        self.id_to_cam_path_map = {v: k for k, v in cam_path_to_id_map.items()}
+        logger.info(f"cam_path_to_id_map: {cam_path_to_id_map}")
 
     def reset(self):
         self.feats = []
@@ -111,24 +127,43 @@ class R1_mAP_eval():
             print("The test feature is normalized")
             feats = torch.nn.functional.normalize(feats, dim=1, p=2)  # along channel
         # query
-        qf = feats[:self.num_query]
-        q_pids = np.asarray(self.pids[:self.num_query])
-        q_camids = np.asarray(self.camids[:self.num_query])
+        qf = feats[: self.num_query]
+        q_pids = np.asarray(self.pids[: self.num_query])
+        q_camids = np.asarray(self.camids[: self.num_query])
         # gallery
-        gf = feats[self.num_query:]
-        g_pids = np.asarray(self.pids[self.num_query:])
+        gf = feats[self.num_query :]
+        g_pids = np.asarray(self.pids[self.num_query :])
+        g_camids = np.asarray(self.camids[self.num_query :])
+        unique_camids = list(set(self.camids))
+        logger.info(f"Number of cameras: {len(unique_camids)}")
+        for camid in unique_camids:
+            qf_cam = qf[q_camids == camid]
+            gf_cam = gf[g_camids == camid]
+            q_pids_cam = q_pids[q_camids == camid]
+            g_pids_cam = g_pids[g_camids == camid]
+            q_camids_cam = q_camids[q_camids == camid]
+            g_camids_cam = g_camids[g_camids == camid]
+            logger.info("")
+            logger.info(
+                f"Processing camera {camid} => {self.id_to_cam_path_map[int(camid)]}"
+            )
+            logger.info(
+                f"\t{len(set(list(q_pids_cam)))} surfers with {qf_cam.size(0)} query and {gf_cam.size(0)} gallery"
+            )
+            if self.reranking:
+                logger.info("=> Enter reranking")
+                distmat = re_ranking(qf_cam, gf_cam, k1=20, k2=6, lambda_value=0.3)
 
-        g_camids = np.asarray(self.camids[self.num_query:])
-        if self.reranking:
-            print('=> Enter reranking')
-            distmat = re_ranking(qf, gf, k1=20, k2=6, lambda_value=0.3)
-
-        else:
-            print('=> Computing DistMat with euclidean_distance')
-            distmat = euclidean_distance(qf, gf)
-        cmc, mAP = eval_func(distmat, q_pids, g_pids, q_camids, g_camids)
+            else:
+                logger.info("=> Computing DistMat with euclidean_distance")
+                distmat = euclidean_distance(qf_cam, gf_cam)
+            # we expect query and gallery to be from the same camer
+            cmc, mAP = eval_func(
+                distmat, q_pids_cam, g_pids_cam, q_camids_cam, g_camids_cam - 1
+            )
+            logger.info("Validation Results ")
+            logger.info("mAP: {:.1%}".format(mAP))
+            for r in [1, 5, 10]:
+                logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
 
         return cmc, mAP, distmat, self.pids, self.camids, qf, gf
-
-
-
