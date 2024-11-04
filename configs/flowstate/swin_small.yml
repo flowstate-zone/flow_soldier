@@ -21,8 +21,8 @@ INPUT:
 DATASETS:
   TRAIN_NAMES: ["urbnsurf-melbourne_left", "urbnsurf-melbourne_right"]
   VAL_NAMES: ["urbnsurf-melbourne_left", "urbnsurf-melbourne_right"]
-  TRAIN_LIMIT: 50
-  VAL_LIMIT: 50
+  TRAIN_LIMIT: 4000
+  VAL_LIMIT: 300
   ROOT_DIR: ('/home/ubuntu/Code/model-training/clustering/data')
 
 DATALOADER:
@@ -35,10 +35,10 @@ SOLVER:
   MAX_EPOCHS: 120
   BASE_LR: 0.0008
   WARMUP_EPOCHS: 20
-  IMS_PER_BATCH: 64
+  IMS_PER_BATCH: 128
   WARMUP_METHOD: "cosine"
   LARGE_FC_LR: False
-  CHECKPOINT_PERIOD: 120
+  CHECKPOINT_PERIOD: 10
   LOG_PERIOD: 20
   EVAL_PERIOD: 10
   WEIGHT_DECAY: 1e-4

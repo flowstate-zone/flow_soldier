@@ -12,6 +12,9 @@ def euclidean_distance(qf, gf):
     gf.to("cuda")
     m = qf.shape[0]
     n = gf.shape[0]
+    logger.info(
+        f"Computing DistMat with euclidean_distance, qf shape: {qf.shape}, gf shape: {gf.shape}"
+    )
     dist_mat = (
         torch.pow(qf, 2).sum(dim=1, keepdim=True).expand(m, n)
         + torch.pow(gf, 2).sum(dim=1, keepdim=True).expand(n, m).t()
@@ -104,6 +107,9 @@ class R1_mAP_eval:
         self.max_rank = max_rank
         self.feat_norm = feat_norm
         self.reranking = reranking
+        self.feats = []
+        self.pids = []
+        self.camids = []
 
     def reset(self):
         self.feats = []

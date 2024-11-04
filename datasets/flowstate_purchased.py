@@ -94,7 +94,8 @@ class FlowstatePurchased(BaseImageDataset):
             pid = filename.split("_")[0]
             pid_container.add(pid)
         if limit is not None:
-            pid_container = random.sample(pid_container, limit)
+            random.seed(0)
+            pid_container = random.sample(pid_container, min(limit, len(pid_container)))
         logger.info(f"Found {len(pid_container)} ids in {dir_path}")
         return pid_container
 
