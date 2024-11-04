@@ -10,6 +10,7 @@ from .msmt17 import MSMT17
 from .sampler_ddp import RandomIdentitySampler_DDP
 from .flowstate_purchased import FlowstatePurchased
 import torch.distributed as dist
+from itertools import chain
 from .mm import MM
 
 __factory = {
@@ -68,13 +69,22 @@ def make_dataloader(cfg):
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
 
-    dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
-
-    train_set = ImageDataset(dataset.train, train_transforms)
-    train_set_normal = ImageDataset(dataset.train, val_transforms)
-    num_classes = dataset.num_train_pids
-    cam_num = dataset.num_train_cams
-    view_num = dataset.num_train_vids
+    train_datasets = [
+        FlowstatePurchased(
+            root=cfg.DATASETS.ROOT_DIR,
+            dataset_name=dataset_name,
+            include_val=False,
+            train_limit=cfg.DATASETS.TRAIN_LIMIT,
+        )
+        for dataset_name in cfg.DATASETS.TRAIN_NAMES
+    ]
+    # concatenate all dataset.train together not using torch
+    full_train = list(chain.from_iterable(dataset.train for dataset in train_datasets))
+    train_set = ImageDataset(full_train, train_transforms)
+    train_set_normal = ImageDataset(full_train, val_transforms)
+    num_classes = sum(dataset.num_train_pids for dataset in train_datasets)
+    cam_num = sum(dataset.num_train_cams for dataset in train_datasets)
+    view_num = sum(dataset.num_train_vids for dataset in train_datasets)
 
     if cfg.DATALOADER.SAMPLER in ["softmax_triplet", "img_triplet"]:
         print("using img_triplet sampler")
@@ -82,7 +92,7 @@ def make_dataloader(cfg):
             print("DIST_TRAIN START")
             mini_batch_size = cfg.SOLVER.IMS_PER_BATCH // dist.get_world_size()
             data_sampler = RandomIdentitySampler_DDP(
-                dataset.train, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE
+                full_train, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE
             )
             batch_sampler = torch.utils.data.sampler.BatchSampler(
                 data_sampler, mini_batch_size, True
@@ -99,7 +109,7 @@ def make_dataloader(cfg):
                 train_set,
                 batch_size=cfg.SOLVER.IMS_PER_BATCH,
                 sampler=RandomIdentitySampler(
-                    dataset.train, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE
+                    full_train, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE
                 ),
                 num_workers=num_workers,
                 collate_fn=train_collate_fn,
@@ -119,7 +129,7 @@ def make_dataloader(cfg):
             train_set,
             batch_size=cfg.SOLVER.IMS_PER_BATCH,
             sampler=RandomIdentitySampler_IdUniform(
-                dataset.train, cfg.DATALOADER.NUM_INSTANCE
+                full_train, cfg.DATALOADER.NUM_INSTANCE
             ),
             num_workers=num_workers,
             collate_fn=train_collate_fn,
@@ -132,15 +142,30 @@ def make_dataloader(cfg):
             )
         )
 
-    val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
+    val_loaders = []
+    for dataset_name in cfg.DATASETS.VAL_NAMES:
+        val_dataset = FlowstatePurchased(
+            root=cfg.DATASETS.ROOT_DIR,
+            dataset_name=dataset_name,
+            include_train=False,
+            val_limit=cfg.DATASETS.VAL_LIMIT,
+        )
+        val_set = ImageDataset(val_dataset.query + val_dataset.gallery, val_transforms)
+        val_loader = DataLoader(
+            val_set,
+            batch_size=cfg.TEST.IMS_PER_BATCH,
+            shuffle=False,
+            num_workers=num_workers,
+            collate_fn=val_collate_fn,
+        )
+        val_loaders.append(
+            {
+                "loader": val_loader,
+                "name": dataset_name,
+                "num_query": len(val_dataset.query),
+            }
+        )
 
-    val_loader = DataLoader(
-        val_set,
-        batch_size=cfg.TEST.IMS_PER_BATCH,
-        shuffle=False,
-        num_workers=num_workers,
-        collate_fn=val_collate_fn,
-    )
     train_loader_normal = DataLoader(
         train_set_normal,
         batch_size=cfg.TEST.IMS_PER_BATCH,
@@ -151,10 +176,8 @@ def make_dataloader(cfg):
     return (
         train_loader,
         train_loader_normal,
-        val_loader,
-        len(dataset.query),
+        val_loaders,
         num_classes,
         cam_num,
         view_num,
-        dataset.cam_path_to_id_map,
     )
