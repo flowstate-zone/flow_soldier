@@ -1,5 +1,5 @@
 import glob
-
+import hashlib
 import os.path as osp
 
 from .bases import BaseImageDataset
@@ -128,7 +128,8 @@ class FlowstatePurchased(BaseImageDataset):
             if pid not in pid_container:
                 continue
 
-            camid = 0 if is_query else 1
+            wave_time = filename.split("__")[1]
+            camid = int(hashlib.md5(wave_time.encode()).hexdigest(), 16) % 256
             if relabel:
                 pid = pid2label[pid]
             dataset.append((img_path, pid, camid, 1))

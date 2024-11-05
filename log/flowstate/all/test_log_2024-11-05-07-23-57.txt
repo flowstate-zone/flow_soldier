@@ -1,0 +1,499 @@
+2024-11-05 07:23:57 transreid INFO: Namespace(config_file='configs/flowstate/all.yml', opts=['TEST.WEIGHT', './log/swin_small_tea.pth', 'MODEL.SEMANTIC_WEIGHT', '0.2'])
+2024-11-05 07:23:57 transreid INFO: Loaded configuration file configs/flowstate/all.yml
+2024-11-05 07:23:57 transreid INFO: 
+MODEL:
+  PRETRAIN_HW_RATIO: 2
+  METRIC_LOSS_TYPE: "triplet"
+  IF_LABELSMOOTH: "off"
+  IF_WITH_CENTER: "no"
+  NAME: "transformer"
+  NO_MARGIN: True
+  DEVICE_ID: ('0')
+  TRANSFORMER_TYPE: "swin_small_patch4_window7_224"
+  STRIDE_SIZE: [16, 16]
+
+INPUT:
+  SIZE_TRAIN: [150, 150]
+  SIZE_TEST: [150, 150]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+
+DATASETS:
+  TRAIN_NAMES:
+    [
+      "urbnsurf-melbourne_left",
+      "urbnsurf-melbourne_right",
+      "urbnsurf-sydney_left",
+      "urbnsurf-sydney_right",
+      "waco-surf_single",
+      "fireside_single",
+      "surf-abu-dhabi_single",
+      "surftown-munich_left",
+      "surftown-munich_right",
+      "surftown-munich_bays_left",
+      "surftown-munich_bays_right",
+    ]
+  VAL_NAMES: [
+      "urbnsurf-melbourne_left",
+      "urbnsurf-melbourne_right",
+      "urbnsurf-sydney_left",
+      "urbnsurf-sydney_right",
+      "waco-surf_single",
+      "fireside_single",
+      "surf-abu-dhabi_single",
+      "surftown-munich_left",
+      "surftown-munich_right",
+      "surftown-munich_bays_left",
+      # "surftown-munich_bays_right",
+    ]
+  TRAIN_LIMIT: 4000
+  VAL_LIMIT: 300
+  ROOT_DIR: ('/home/ubuntu/Code/model-training/clustering/data')
+
+DATALOADER:
+  SAMPLER: "softmax_triplet"
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: "SGD"
+  MAX_EPOCHS: 120
+  BASE_LR: 0.0008
+  WARMUP_EPOCHS: 20
+  IMS_PER_BATCH: 128
+  WARMUP_METHOD: "cosine"
+  LARGE_FC_LR: False
+  CHECKPOINT_PERIOD: 1
+  LOG_PERIOD: 200
+  EVAL_PERIOD: 1
+  WEIGHT_DECAY: 1e-4
+  WEIGHT_DECAY_BIAS: 1e-4
+  BIAS_LR_FACTOR: 2
+
+TEST:
+  EVAL: True
+  IMS_PER_BATCH: 256
+  RE_RANKING: False
+  WEIGHT: ""
+  NECK_FEAT: "before"
+  FEAT_NORM: "yes"
+
+OUTPUT_DIR: "./log/flowstate/all"
+
+2024-11-05 07:23:57 transreid INFO: Running with config:
+DATALOADER:
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+  REMOVE_TAIL: 0
+  SAMPLER: softmax_triplet
+DATASETS:
+  ROOT_DIR: /home/ubuntu/Code/model-training/clustering/data
+  ROOT_TRAIN_DIR: ../data
+  ROOT_VAL_DIR: ../data
+  TRAIN_LIMIT: 4000
+  TRAIN_NAMES: ['urbnsurf-melbourne_left', 'urbnsurf-melbourne_right', 'urbnsurf-sydney_left', 'urbnsurf-sydney_right', 'waco-surf_single', 'fireside_single', 'surf-abu-dhabi_single', 'surftown-munich_left', 'surftown-munich_right', 'surftown-munich_bays_left', 'surftown-munich_bays_right']
+  VAL_LIMIT: 300
+  VAL_NAMES: ['urbnsurf-melbourne_left', 'urbnsurf-melbourne_right', 'urbnsurf-sydney_left', 'urbnsurf-sydney_right', 'waco-surf_single', 'fireside_single', 'surf-abu-dhabi_single', 'surftown-munich_left', 'surftown-munich_right', 'surftown-munich_bays_left']
+INPUT:
+  PADDING: 10
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  PROB: 0.5
+  RE_PROB: 0.5
+  SIZE_TEST: [150, 150]
+  SIZE_TRAIN: [150, 150]
+MODEL:
+  ATT_DROP_RATE: 0.0
+  COS_LAYER: False
+  DEVICE: cuda
+  DEVICE_ID: 0
+  DEVIDE_LENGTH: 4
+  DIST_TRAIN: False
+  DROPOUT_RATE: 0.0
+  DROP_OUT: 0.0
+  DROP_PATH: 0.1
+  FEAT_DIM: 512
+  GEM_POOLING: False
+  ID_LOSS_TYPE: softmax
+  ID_LOSS_WEIGHT: 1.0
+  IF_LABELSMOOTH: off
+  IF_WITH_CENTER: no
+  JPM: False
+  LAST_STRIDE: 1
+  METRIC_LOSS_TYPE: triplet
+  NAME: transformer
+  NECK: bnneck
+  NO_MARGIN: True
+  PRETRAIN_CHOICE: imagenet
+  PRETRAIN_HW_RATIO: 2
+  PRETRAIN_PATH: 
+  REDUCE_FEAT_DIM: False
+  RE_ARRANGE: True
+  SEMANTIC_WEIGHT: 0.2
+  SHIFT_NUM: 5
+  SHUFFLE_GROUP: 2
+  SIE_CAMERA: False
+  SIE_COE: 3.0
+  SIE_VIEW: False
+  STEM_CONV: False
+  STRIDE_SIZE: [16, 16]
+  TRANSFORMER_TYPE: swin_small_patch4_window7_224
+  TRIPLET_LOSS_WEIGHT: 1.0
+OUTPUT_DIR: ./log/flowstate/all
+SOLVER:
+  BASE_LR: 0.0008
+  BIAS_LR_FACTOR: 2
+  CENTER_LOSS_WEIGHT: 0.0005
+  CENTER_LR: 0.5
+  CHECKPOINT_PERIOD: 1
+  COSINE_MARGIN: 0.5
+  COSINE_SCALE: 30
+  EVAL_PERIOD: 1
+  GAMMA: 0.1
+  IMS_PER_BATCH: 128
+  LARGE_FC_LR: False
+  LOG_PERIOD: 200
+  MARGIN: 0.3
+  MAX_EPOCHS: 120
+  MOMENTUM: 0.9
+  OPTIMIZER_NAME: SGD
+  SEED: 1234
+  STEPS: (40, 70)
+  TRP_L2: False
+  WARMUP_EPOCHS: 20
+  WARMUP_FACTOR: 0.01
+  WARMUP_METHOD: cosine
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+TEST:
+  DIST_MAT: dist_mat.npy
+  EVAL: True
+  FEAT_NORM: yes
+  IMS_PER_BATCH: 256
+  NECK_FEAT: before
+  RE_RANKING: False
+  WEIGHT: ./log/swin_small_tea.pth
+2024-11-05 07:23:57 transreid.train INFO: Loading fireside_single from /home/ubuntu/Code/model-training/clustering/data/fireside_single
+2024-11-05 07:23:57 transreid.train INFO: Found 330 ids in /home/ubuntu/Code/model-training/clustering/data/fireside_single/train
+2024-11-05 07:23:57 transreid.check INFO: Dataset statistics:
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   train    |   330 |    30971 |       254
+2024-11-05 07:23:57 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.train INFO: Loading surf-abu-dhabi_single from /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single
+2024-11-05 07:23:57 transreid.train INFO: Found 176 ids in /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single/train
+2024-11-05 07:23:57 transreid.check INFO: Dataset statistics:
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   train    |   176 |    16159 |       249
+2024-11-05 07:23:57 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.train INFO: Loading surftown-munich_bays_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left
+2024-11-05 07:23:57 transreid.train INFO: Found 56 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left/train
+2024-11-05 07:23:57 transreid.check INFO: Dataset statistics:
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   train    |    56 |     4415 |       147
+2024-11-05 07:23:57 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.train INFO: Loading surftown-munich_bays_right from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_right
+2024-11-05 07:23:57 transreid.train INFO: Found 21 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_right/train
+2024-11-05 07:23:57 transreid.check INFO: Dataset statistics:
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.check INFO:   train    |    21 |     1709 |        77
+2024-11-05 07:23:57 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:23:57 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:57 transreid.train INFO: Loading surftown-munich_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left
+2024-11-05 07:23:57 transreid.train INFO: Found 588 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left/train
+2024-11-05 07:23:58 transreid.check INFO: Dataset statistics:
+2024-11-05 07:23:58 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:58 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:23:58 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:58 transreid.check INFO:   train    |   588 |    48373 |       256
+2024-11-05 07:23:58 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:23:58 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:23:58 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:58 transreid.train INFO: Loading surftown-munich_right from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right
+2024-11-05 07:23:58 transreid.train INFO: Found 590 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right/train
+2024-11-05 07:23:58 transreid.check INFO: Dataset statistics:
+2024-11-05 07:23:58 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:58 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:23:58 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:58 transreid.check INFO:   train    |   590 |    47910 |       256
+2024-11-05 07:23:58 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:23:58 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:23:58 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:23:58 transreid.train INFO: Loading urbnsurf-melbourne_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left
+2024-11-05 07:23:59 transreid.train INFO: Found 1736 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left/train
+2024-11-05 07:24:01 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:01 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:01 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:01 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:01 transreid.check INFO:   train    |  1736 |   135287 |       256
+2024-11-05 07:24:01 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:24:01 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:24:01 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:01 transreid.train INFO: Loading urbnsurf-melbourne_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right
+2024-11-05 07:24:02 transreid.train INFO: Found 2487 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right/train
+2024-11-05 07:24:06 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:06 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:06 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:06 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:06 transreid.check INFO:   train    |  2487 |   207638 |       256
+2024-11-05 07:24:06 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:24:06 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:24:06 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:06 transreid.train INFO: Loading urbnsurf-sydney_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left
+2024-11-05 07:24:07 transreid.train INFO: Found 3504 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left/train
+2024-11-05 07:24:15 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:15 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:15 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:15 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:15 transreid.check INFO:   train    |  3504 |   265217 |       256
+2024-11-05 07:24:15 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:24:15 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:24:15 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:15 transreid.train INFO: Loading urbnsurf-sydney_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right
+2024-11-05 07:24:16 transreid.train INFO: Found 4000 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right/train
+2024-11-05 07:24:27 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:27 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:27 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:27 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:27 transreid.check INFO:   train    |  4000 |   318603 |       256
+2024-11-05 07:24:27 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:24:27 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:24:27 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:27 transreid.train INFO: Loading waco-surf_single from /home/ubuntu/Code/model-training/clustering/data/waco-surf_single
+2024-11-05 07:24:28 transreid.train INFO: Found 1396 ids in /home/ubuntu/Code/model-training/clustering/data/waco-surf_single/train
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |  1396 |   134745 |       256
+2024-11-05 07:24:30 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading fireside_single from /home/ubuntu/Code/model-training/clustering/data/fireside_single
+2024-11-05 07:24:30 transreid.train INFO: Found 40 ids in /home/ubuntu/Code/model-training/clustering/data/fireside_single/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |    40 |      385 |       128
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |    40 |      957 |       128
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading surf-abu-dhabi_single from /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single
+2024-11-05 07:24:30 transreid.train INFO: Found 27 ids in /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |    27 |      247 |        95
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |    27 |      616 |        95
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading surftown-munich_bays_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left
+2024-11-05 07:24:30 transreid.train INFO: Found 5 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |     5 |       50 |        24
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |     5 |      123 |        24
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading surftown-munich_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left
+2024-11-05 07:24:30 transreid.train INFO: Found 51 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |    51 |      390 |       134
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |    51 |      980 |       134
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading surftown-munich_right from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right
+2024-11-05 07:24:30 transreid.train INFO: Found 64 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |    64 |      527 |       170
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |    64 |     1319 |       170
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading urbnsurf-melbourne_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left
+2024-11-05 07:24:30 transreid.train INFO: Found 210 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |   210 |     1624 |       248
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |   210 |     4058 |       248
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading urbnsurf-melbourne_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right
+2024-11-05 07:24:30 transreid.train INFO: Found 298 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |   298 |     2518 |       253
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |   298 |     6291 |       253
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading urbnsurf-sydney_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left
+2024-11-05 07:24:30 transreid.train INFO: Found 300 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |   300 |     2252 |       254
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |   300 |     5624 |       254
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading urbnsurf-sydney_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right
+2024-11-05 07:24:30 transreid.train INFO: Found 300 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right/query
+2024-11-05 07:24:30 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:30 transreid.check INFO:   query    |   300 |     2348 |       254
+2024-11-05 07:24:30 transreid.check INFO:   gallery  |   300 |     5865 |       254
+2024-11-05 07:24:30 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:30 transreid.train INFO: Loading waco-surf_single from /home/ubuntu/Code/model-training/clustering/data/waco-surf_single
+2024-11-05 07:24:30 transreid.train INFO: Found 135 ids in /home/ubuntu/Code/model-training/clustering/data/waco-surf_single/query
+2024-11-05 07:24:31 transreid.check INFO: Dataset statistics:
+2024-11-05 07:24:31 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:31 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:24:31 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:31 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:24:31 transreid.check INFO:   query    |   135 |     1340 |       237
+2024-11-05 07:24:31 transreid.check INFO:   gallery  |   135 |     3345 |       237
+2024-11-05 07:24:31 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:24:32 transreid.test INFO: Enter inferencing
+2024-11-05 07:24:32 transreid.test INFO: 
+2024-11-05 07:24:32 transreid.test INFO: 
+2024-11-05 07:24:32 transreid.test INFO: ##=> Validation on FIRESIDE_SINGLE <=##
+2024-11-05 07:24:36 transreid.train INFO: The test feature is normalized
+2024-11-05 07:24:36 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:24:36 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([385, 768]), gf shape: torch.Size([957, 768])
+2024-11-05 07:24:36 transreid.test INFO: Validation Results 
+2024-11-05 07:24:36 transreid.test INFO: mAP: 8.8%
+2024-11-05 07:24:36 transreid.test INFO: CMC curve, Rank-1  :26.8%
+2024-11-05 07:24:36 transreid.test INFO: CMC curve, Rank-5  :43.6%
+2024-11-05 07:24:36 transreid.test INFO: CMC curve, Rank-10 :55.8%
+2024-11-05 07:24:36 transreid.test INFO: 
+2024-11-05 07:24:36 transreid.test INFO: 
+2024-11-05 07:24:36 transreid.test INFO: ##=> Validation on SURF-ABU-DHABI_SINGLE <=##
+2024-11-05 07:24:38 transreid.train INFO: The test feature is normalized
+2024-11-05 07:24:38 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:24:38 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([247, 768]), gf shape: torch.Size([616, 768])
+2024-11-05 07:24:38 transreid.test INFO: Validation Results 
+2024-11-05 07:24:38 transreid.test INFO: mAP: 8.9%
+2024-11-05 07:24:38 transreid.test INFO: CMC curve, Rank-1  :15.9%
+2024-11-05 07:24:38 transreid.test INFO: CMC curve, Rank-5  :37.1%
+2024-11-05 07:24:38 transreid.test INFO: CMC curve, Rank-10 :51.0%
+2024-11-05 07:24:38 transreid.test INFO: 
+2024-11-05 07:24:38 transreid.test INFO: 
+2024-11-05 07:24:38 transreid.test INFO: ##=> Validation on SURFTOWN-MUNICH_BAYS_LEFT <=##
+2024-11-05 07:24:39 transreid.train INFO: The test feature is normalized
+2024-11-05 07:24:39 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:24:39 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([50, 768]), gf shape: torch.Size([123, 768])
+2024-11-05 07:24:39 transreid.test INFO: Validation Results 
+2024-11-05 07:24:39 transreid.test INFO: mAP: 51.9%
+2024-11-05 07:24:39 transreid.test INFO: CMC curve, Rank-1  :70.0%
+2024-11-05 07:24:39 transreid.test INFO: CMC curve, Rank-5  :82.0%
+2024-11-05 07:24:39 transreid.test INFO: CMC curve, Rank-10 :84.0%
+2024-11-05 07:24:39 transreid.test INFO: 
+2024-11-05 07:24:39 transreid.test INFO: 
+2024-11-05 07:24:39 transreid.test INFO: ##=> Validation on SURFTOWN-MUNICH_LEFT <=##
+2024-11-05 07:24:42 transreid.train INFO: The test feature is normalized
+2024-11-05 07:24:42 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:24:42 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([390, 768]), gf shape: torch.Size([980, 768])
+2024-11-05 07:24:42 transreid.test INFO: Validation Results 
+2024-11-05 07:24:42 transreid.test INFO: mAP: 6.4%
+2024-11-05 07:24:42 transreid.test INFO: CMC curve, Rank-1  :14.1%
+2024-11-05 07:24:42 transreid.test INFO: CMC curve, Rank-5  :30.6%
+2024-11-05 07:24:42 transreid.test INFO: CMC curve, Rank-10 :44.0%
+2024-11-05 07:24:42 transreid.test INFO: 
+2024-11-05 07:24:42 transreid.test INFO: 
+2024-11-05 07:24:42 transreid.test INFO: ##=> Validation on SURFTOWN-MUNICH_RIGHT <=##
+2024-11-05 07:24:46 transreid.train INFO: The test feature is normalized
+2024-11-05 07:24:46 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:24:46 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([527, 768]), gf shape: torch.Size([1319, 768])
+2024-11-05 07:24:47 transreid.test INFO: Validation Results 
+2024-11-05 07:24:47 transreid.test INFO: mAP: 6.4%
+2024-11-05 07:24:47 transreid.test INFO: CMC curve, Rank-1  :15.4%
+2024-11-05 07:24:47 transreid.test INFO: CMC curve, Rank-5  :32.8%
+2024-11-05 07:24:47 transreid.test INFO: CMC curve, Rank-10 :42.6%
+2024-11-05 07:24:47 transreid.test INFO: 
+2024-11-05 07:24:47 transreid.test INFO: 
+2024-11-05 07:24:47 transreid.test INFO: ##=> Validation on URBNSURF-MELBOURNE_LEFT <=##
+2024-11-05 07:24:57 transreid.train INFO: The test feature is normalized
+2024-11-05 07:24:57 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:24:57 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([1624, 768]), gf shape: torch.Size([4058, 768])
+2024-11-05 07:24:59 transreid.test INFO: Validation Results 
+2024-11-05 07:24:59 transreid.test INFO: mAP: 4.0%
+2024-11-05 07:24:59 transreid.test INFO: CMC curve, Rank-1  :11.9%
+2024-11-05 07:24:59 transreid.test INFO: CMC curve, Rank-5  :27.2%
+2024-11-05 07:24:59 transreid.test INFO: CMC curve, Rank-10 :35.4%
+2024-11-05 07:24:59 transreid.test INFO: 
+2024-11-05 07:24:59 transreid.test INFO: 
+2024-11-05 07:24:59 transreid.test INFO: ##=> Validation on URBNSURF-MELBOURNE_RIGHT <=##
+2024-11-05 07:25:15 transreid.train INFO: The test feature is normalized
+2024-11-05 07:25:15 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:25:15 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([2518, 768]), gf shape: torch.Size([6291, 768])
+2024-11-05 07:25:18 transreid.test INFO: Validation Results 
+2024-11-05 07:25:18 transreid.test INFO: mAP: 3.1%
+2024-11-05 07:25:18 transreid.test INFO: CMC curve, Rank-1  :9.9%
+2024-11-05 07:25:18 transreid.test INFO: CMC curve, Rank-5  :23.4%
+2024-11-05 07:25:18 transreid.test INFO: CMC curve, Rank-10 :31.9%
+2024-11-05 07:25:18 transreid.test INFO: 
+2024-11-05 07:25:18 transreid.test INFO: 
+2024-11-05 07:25:18 transreid.test INFO: ##=> Validation on URBNSURF-SYDNEY_LEFT <=##
+2024-11-05 07:25:32 transreid.train INFO: The test feature is normalized
+2024-11-05 07:25:32 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:25:32 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([2252, 768]), gf shape: torch.Size([5624, 768])
+2024-11-05 07:25:35 transreid.test INFO: Validation Results 
+2024-11-05 07:25:35 transreid.test INFO: mAP: 3.0%
+2024-11-05 07:25:35 transreid.test INFO: CMC curve, Rank-1  :8.7%
+2024-11-05 07:25:35 transreid.test INFO: CMC curve, Rank-5  :21.9%
+2024-11-05 07:25:35 transreid.test INFO: CMC curve, Rank-10 :29.8%
+2024-11-05 07:25:35 transreid.test INFO: 
+2024-11-05 07:25:35 transreid.test INFO: 
+2024-11-05 07:25:35 transreid.test INFO: ##=> Validation on URBNSURF-SYDNEY_RIGHT <=##
+2024-11-05 07:25:50 transreid.train INFO: The test feature is normalized
+2024-11-05 07:25:50 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:25:50 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([2348, 768]), gf shape: torch.Size([5865, 768])
+2024-11-05 07:25:53 transreid.test INFO: Validation Results 
+2024-11-05 07:25:53 transreid.test INFO: mAP: 2.6%
+2024-11-05 07:25:53 transreid.test INFO: CMC curve, Rank-1  :7.9%
+2024-11-05 07:25:53 transreid.test INFO: CMC curve, Rank-5  :18.9%
+2024-11-05 07:25:53 transreid.test INFO: CMC curve, Rank-10 :27.4%
+2024-11-05 07:25:53 transreid.test INFO: 
+2024-11-05 07:25:53 transreid.test INFO: 
+2024-11-05 07:25:53 transreid.test INFO: ##=> Validation on WACO-SURF_SINGLE <=##
+2024-11-05 07:26:02 transreid.train INFO: The test feature is normalized
+2024-11-05 07:26:02 transreid.train INFO: => Computing DistMat with euclidean_distance
+2024-11-05 07:26:02 transreid.train INFO: Computing DistMat with euclidean_distance, qf shape: torch.Size([1340, 768]), gf shape: torch.Size([3345, 768])
+2024-11-05 07:26:03 transreid.test INFO: Validation Results 
+2024-11-05 07:26:03 transreid.test INFO: mAP: 3.4%
+2024-11-05 07:26:03 transreid.test INFO: CMC curve, Rank-1  :9.8%
+2024-11-05 07:26:03 transreid.test INFO: CMC curve, Rank-5  :22.5%
+2024-11-05 07:26:03 transreid.test INFO: CMC curve, Rank-10 :30.4%

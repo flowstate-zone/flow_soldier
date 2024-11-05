@@ -1381,6 +1381,9 @@ class SwinTransformer(BaseModule):
             for k, v in _state_dict.items():
                 if k.startswith("backbone."):
                     state_dict[k[9:]] = v
+                # deal with resuming training
+                elif k.startswith("base."):
+                    state_dict[k[5:]] = v
 
             # strip prefix of state_dict
             if list(state_dict.keys())[0].startswith("module."):
@@ -1404,6 +1407,7 @@ class SwinTransformer(BaseModule):
             relative_position_bias_table_keys = [
                 k for k in state_dict.keys() if "relative_position_bias_table" in k
             ]
+
             for table_key in relative_position_bias_table_keys:
                 table_pretrained = state_dict[table_key]
                 table_current = self.state_dict()[table_key]

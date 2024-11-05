@@ -1,7 +1,7 @@
 # Swin Base
-CUDA_VISIBLE_DEVICES=0 python train.py --config_file configs/flowstate/swin_small.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/swin_small_tea.pth' OUTPUT_DIR './log/flowstate/swin_base' SOLVER.BASE_LR 0.0002 SOLVER.OPTIMIZER_NAME 'SGD' MODEL.SEMANTIC_WEIGHT 0.2
+CUDA_VISIBLE_DEVICES=0 python train.py --config_file configs/flowstate/all.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/flowstate/urbnsurf-melbourne/transformer_60.pth' OUTPUT_DIR './log/flowstate/all' SOLVER.BASE_LR 0.0002 SOLVER.OPTIMIZER_NAME 'SGD' MODEL.SEMANTIC_WEIGHT 0.2
 
-# Swin Small
+# Swin Small# './log/swin_small_tea.pth'
 #CUDA_VISIBLE_DEVICES=0 python train.py --config_file configs/msmt17/swin_small.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH 'path/to/SOLIDER/log/lup/swin_small/checkpoint_tea.pth' OUTPUT_DIR './log/msmt17/swin_small' SOLVER.BASE_LR 0.0002 SOLVER.OPTIMIZER_NAME 'SGD' MODEL.SEMANTIC_WEIGHT 0.2
 
 # Swin Tiny

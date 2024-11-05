@@ -232,7 +232,9 @@ def do_inference(cfg, model, val_loaders):
         val_loader = val_loader_dict["loader"]
         num_query = val_loader_dict["num_query"]
         name = val_loader_dict["name"]
-        logger.info(f"Validation on {name} set")
+        logger.info("")
+        logger.info("")
+        logger.info(f"##=> Validation on {name.upper()} <=##")
 
         evaluator = R1_mAP_eval(
             num_query,

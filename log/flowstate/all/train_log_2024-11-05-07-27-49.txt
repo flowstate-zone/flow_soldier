@@ -1,0 +1,307 @@
+2024-11-05 07:27:49 transreid INFO: Saving model in the path :./log/flowstate/all
+2024-11-05 07:27:49 transreid INFO: Loaded configuration file configs/flowstate/all.yml
+2024-11-05 07:27:49 transreid INFO: Running with config:
+DATALOADER:
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+  REMOVE_TAIL: 0
+  SAMPLER: softmax_triplet
+DATASETS:
+  ROOT_DIR: /home/ubuntu/Code/model-training/clustering/data
+  ROOT_TRAIN_DIR: ../data
+  ROOT_VAL_DIR: ../data
+  TRAIN_LIMIT: 4000
+  TRAIN_NAMES: ['urbnsurf-melbourne_left', 'urbnsurf-melbourne_right', 'urbnsurf-sydney_left', 'urbnsurf-sydney_right', 'waco-surf_single', 'fireside_single', 'surf-abu-dhabi_single', 'surftown-munich_left', 'surftown-munich_right', 'surftown-munich_bays_left', 'surftown-munich_bays_right']
+  VAL_LIMIT: 300
+  VAL_NAMES: ['urbnsurf-melbourne_left', 'urbnsurf-melbourne_right', 'urbnsurf-sydney_left', 'urbnsurf-sydney_right', 'waco-surf_single', 'fireside_single', 'surf-abu-dhabi_single', 'surftown-munich_left', 'surftown-munich_right', 'surftown-munich_bays_left']
+INPUT:
+  PADDING: 10
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  PROB: 0.5
+  RE_PROB: 0.5
+  SIZE_TEST: [150, 150]
+  SIZE_TRAIN: [150, 150]
+MODEL:
+  ATT_DROP_RATE: 0.0
+  COS_LAYER: False
+  DEVICE: cuda
+  DEVICE_ID: 0
+  DEVIDE_LENGTH: 4
+  DIST_TRAIN: False
+  DROPOUT_RATE: 0.0
+  DROP_OUT: 0.0
+  DROP_PATH: 0.1
+  FEAT_DIM: 512
+  GEM_POOLING: False
+  ID_LOSS_TYPE: softmax
+  ID_LOSS_WEIGHT: 1.0
+  IF_LABELSMOOTH: off
+  IF_WITH_CENTER: no
+  JPM: False
+  LAST_STRIDE: 1
+  METRIC_LOSS_TYPE: triplet
+  NAME: transformer
+  NECK: bnneck
+  NO_MARGIN: True
+  PRETRAIN_CHOICE: self
+  PRETRAIN_HW_RATIO: 2
+  PRETRAIN_PATH: ./log/flowstate/urbnsurf-melbourne/transformer_60.pth
+  REDUCE_FEAT_DIM: False
+  RE_ARRANGE: True
+  SEMANTIC_WEIGHT: 0.2
+  SHIFT_NUM: 5
+  SHUFFLE_GROUP: 2
+  SIE_CAMERA: False
+  SIE_COE: 3.0
+  SIE_VIEW: False
+  STEM_CONV: False
+  STRIDE_SIZE: [16, 16]
+  TRANSFORMER_TYPE: swin_small_patch4_window7_224
+  TRIPLET_LOSS_WEIGHT: 1.0
+OUTPUT_DIR: ./log/flowstate/all
+SOLVER:
+  BASE_LR: 0.0002
+  BIAS_LR_FACTOR: 2
+  CENTER_LOSS_WEIGHT: 0.0005
+  CENTER_LR: 0.5
+  CHECKPOINT_PERIOD: 1
+  COSINE_MARGIN: 0.5
+  COSINE_SCALE: 30
+  EVAL_PERIOD: 1
+  GAMMA: 0.1
+  IMS_PER_BATCH: 128
+  LARGE_FC_LR: False
+  LOG_PERIOD: 200
+  MARGIN: 0.3
+  MAX_EPOCHS: 120
+  MOMENTUM: 0.9
+  OPTIMIZER_NAME: SGD
+  SEED: 1234
+  STEPS: (40, 70)
+  TRP_L2: False
+  WARMUP_EPOCHS: 20
+  WARMUP_FACTOR: 0.01
+  WARMUP_METHOD: cosine
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+TEST:
+  DIST_MAT: dist_mat.npy
+  EVAL: True
+  FEAT_NORM: yes
+  IMS_PER_BATCH: 256
+  NECK_FEAT: before
+  RE_RANKING: False
+  WEIGHT: 
+2024-11-05 07:27:49 transreid.train INFO: Loading fireside_single from /home/ubuntu/Code/model-training/clustering/data/fireside_single
+2024-11-05 07:27:49 transreid.train INFO: Found 330 ids in /home/ubuntu/Code/model-training/clustering/data/fireside_single/train
+2024-11-05 07:27:50 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   train    |   330 |    30971 |       254
+2024-11-05 07:27:50 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.train INFO: Loading surf-abu-dhabi_single from /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single
+2024-11-05 07:27:50 transreid.train INFO: Found 176 ids in /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single/train
+2024-11-05 07:27:50 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   train    |   176 |    16159 |       249
+2024-11-05 07:27:50 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.train INFO: Loading surftown-munich_bays_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left
+2024-11-05 07:27:50 transreid.train INFO: Found 56 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left/train
+2024-11-05 07:27:50 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   train    |    56 |     4415 |       147
+2024-11-05 07:27:50 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.train INFO: Loading surftown-munich_bays_right from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_right
+2024-11-05 07:27:50 transreid.train INFO: Found 21 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_right/train
+2024-11-05 07:27:50 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   train    |    21 |     1709 |        77
+2024-11-05 07:27:50 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.train INFO: Loading surftown-munich_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left
+2024-11-05 07:27:50 transreid.train INFO: Found 588 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left/train
+2024-11-05 07:27:50 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.check INFO:   train    |   588 |    48373 |       256
+2024-11-05 07:27:50 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:50 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:50 transreid.train INFO: Loading surftown-munich_right from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right
+2024-11-05 07:27:51 transreid.train INFO: Found 590 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right/train
+2024-11-05 07:27:51 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:51 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:51 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:51 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:51 transreid.check INFO:   train    |   590 |    47910 |       256
+2024-11-05 07:27:51 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:51 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:51 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:51 transreid.train INFO: Loading urbnsurf-melbourne_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left
+2024-11-05 07:27:52 transreid.train INFO: Found 1736 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left/train
+2024-11-05 07:27:54 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:54 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:54 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:54 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:54 transreid.check INFO:   train    |  1736 |   135287 |       256
+2024-11-05 07:27:54 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:54 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:54 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:54 transreid.train INFO: Loading urbnsurf-melbourne_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right
+2024-11-05 07:27:55 transreid.train INFO: Found 2487 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right/train
+2024-11-05 07:27:59 transreid.check INFO: Dataset statistics:
+2024-11-05 07:27:59 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:59 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:27:59 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:59 transreid.check INFO:   train    |  2487 |   207638 |       256
+2024-11-05 07:27:59 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:27:59 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:27:59 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:27:59 transreid.train INFO: Loading urbnsurf-sydney_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left
+2024-11-05 07:28:00 transreid.train INFO: Found 3504 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left/train
+2024-11-05 07:28:08 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:08 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:08 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:08 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:08 transreid.check INFO:   train    |  3504 |   265217 |       256
+2024-11-05 07:28:08 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:28:08 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:28:08 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:08 transreid.train INFO: Loading urbnsurf-sydney_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right
+2024-11-05 07:28:09 transreid.train INFO: Found 4000 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right/train
+2024-11-05 07:28:20 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:20 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:20 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:20 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:20 transreid.check INFO:   train    |  4000 |   318025 |       256
+2024-11-05 07:28:20 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:28:20 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:28:20 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:20 transreid.train INFO: Loading waco-surf_single from /home/ubuntu/Code/model-training/clustering/data/waco-surf_single
+2024-11-05 07:28:21 transreid.train INFO: Found 1396 ids in /home/ubuntu/Code/model-training/clustering/data/waco-surf_single/train
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |  1396 |   134745 |       256
+2024-11-05 07:28:23 transreid.check INFO:   query    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading fireside_single from /home/ubuntu/Code/model-training/clustering/data/fireside_single
+2024-11-05 07:28:23 transreid.train INFO: Found 40 ids in /home/ubuntu/Code/model-training/clustering/data/fireside_single/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |    40 |      385 |       128
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |    40 |      957 |       128
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading surf-abu-dhabi_single from /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single
+2024-11-05 07:28:23 transreid.train INFO: Found 27 ids in /home/ubuntu/Code/model-training/clustering/data/surf-abu-dhabi_single/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |    27 |      247 |        95
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |    27 |      616 |        95
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading surftown-munich_bays_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left
+2024-11-05 07:28:23 transreid.train INFO: Found 5 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_bays_left/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |     5 |       50 |        24
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |     5 |      123 |        24
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading surftown-munich_left from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left
+2024-11-05 07:28:23 transreid.train INFO: Found 51 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_left/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |    51 |      390 |       134
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |    51 |      980 |       134
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading surftown-munich_right from /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right
+2024-11-05 07:28:23 transreid.train INFO: Found 64 ids in /home/ubuntu/Code/model-training/clustering/data/surftown-munich_right/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |    64 |      527 |       170
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |    64 |     1319 |       170
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading urbnsurf-melbourne_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left
+2024-11-05 07:28:23 transreid.train INFO: Found 210 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_left/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |   210 |     1624 |       248
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |   210 |     4058 |       248
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading urbnsurf-melbourne_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right
+2024-11-05 07:28:23 transreid.train INFO: Found 298 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-melbourne_right/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |   298 |     2518 |       253
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |   298 |     6291 |       253
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading urbnsurf-sydney_left from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left
+2024-11-05 07:28:23 transreid.train INFO: Found 300 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_left/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |   300 |     2261 |       254
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |   300 |     5648 |       254
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading urbnsurf-sydney_right from /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right
+2024-11-05 07:28:23 transreid.train INFO: Found 300 ids in /home/ubuntu/Code/model-training/clustering/data/urbnsurf-sydney_right/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |   300 |     2288 |       253
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |   300 |     5713 |       253
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.train INFO: Loading waco-surf_single from /home/ubuntu/Code/model-training/clustering/data/waco-surf_single
+2024-11-05 07:28:23 transreid.train INFO: Found 135 ids in /home/ubuntu/Code/model-training/clustering/data/waco-surf_single/query
+2024-11-05 07:28:23 transreid.check INFO: Dataset statistics:
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   subset   | # ids | # images | # cameras
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:23 transreid.check INFO:   train    |     0 |        0 |         0
+2024-11-05 07:28:23 transreid.check INFO:   query    |   135 |     1340 |       237
+2024-11-05 07:28:23 transreid.check INFO:   gallery  |   135 |     3345 |       237
+2024-11-05 07:28:23 transreid.check INFO:   ----------------------------------------
+2024-11-05 07:28:25 transreid INFO: ===========using cosine learning rate=======
+2024-11-05 07:28:25 transreid.train INFO: start training

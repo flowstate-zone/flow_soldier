@@ -76,7 +76,7 @@ def make_dataloader(cfg):
             include_val=False,
             train_limit=cfg.DATASETS.TRAIN_LIMIT,
         )
-        for dataset_name in cfg.DATASETS.TRAIN_NAMES
+        for dataset_name in sorted(cfg.DATASETS.TRAIN_NAMES)
     ]
     # concatenate all dataset.train together not using torch
     full_train = list(chain.from_iterable(dataset.train for dataset in train_datasets))
@@ -143,7 +143,7 @@ def make_dataloader(cfg):
         )
 
     val_loaders = []
-    for dataset_name in cfg.DATASETS.VAL_NAMES:
+    for dataset_name in sorted(cfg.DATASETS.VAL_NAMES):
         val_dataset = FlowstatePurchased(
             root=cfg.DATASETS.ROOT_DIR,
             dataset_name=dataset_name,
