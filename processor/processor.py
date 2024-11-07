@@ -161,7 +161,9 @@ def do_train(
                         val_loader = val_loader_dict["loader"]
                         num_query = val_loader_dict["num_query"]
                         name = val_loader_dict["name"]
-                        logger.info(f"Validation on {name} set")
+                        logger.info("")
+                        logger.info("")
+                        logger.info(f"Validation on {name.upper()} set")
                         evaluator = R1_mAP_eval(
                             num_query,
                             max_rank=50,
@@ -197,7 +199,9 @@ def do_train(
                     val_loader = val_loader_dict["loader"]
                     num_query = val_loader_dict["num_query"]
                     name = val_loader_dict["name"]
-                    logger.info(f"Validation on {name} set")
+                    logger.info("")
+                    logger.info("")
+                    logger.info(f"Validation on {name.upper()} set")
                     evaluator = R1_mAP_eval(
                         num_query,
                         max_rank=50,
