@@ -88,6 +88,10 @@ if __name__ == "__main__":
         view_num=view_num,
         semantic_weight=cfg.MODEL.SEMANTIC_WEIGHT,
     )
+    if cfg.MODEL.RESUME != "":
+        logger.info(f"Resuming from {cfg.MODEL.RESUME}")
+        model.load_param(cfg.MODEL.RESUME)
+
     loss_func, center_criterion = make_loss(cfg, num_classes=num_classes)
     optimizer, optimizer_center = make_optimizer(cfg, model, center_criterion)
 

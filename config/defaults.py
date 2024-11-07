@@ -26,6 +26,7 @@ _C.MODEL.LAST_STRIDE = 1
 # Path to pretrained model of backbone
 _C.MODEL.PRETRAIN_PATH = ""
 _C.MODEL.PRETRAIN_HW_RATIO = 1
+_C.MODEL.RESUME = ""
 
 # Use ImageNet pretrained model to initialize backbone or use self trained model to initialize the whole model
 # Options: 'imagenet' , 'self' , 'finetune'
