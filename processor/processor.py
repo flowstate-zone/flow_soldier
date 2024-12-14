@@ -51,7 +51,14 @@ def do_train(
         loss_meter.reset()
         acc_meter.reset()
         model.train()
+        print("len(train_loader)", len(train_loader))
+        print("train_loader", train_loader)
+        print("doing epoch", epoch)
         for n_iter, (img, vid, target_cam, target_view) in enumerate(train_loader):
+            print("n_iter", n_iter)
+            print("vid", vid)
+            print("target_cam", target_cam)
+            print("target_view", target_view)
             optimizer.zero_grad()
             optimizer_center.zero_grad()
             img = img.to(device)
@@ -62,6 +69,7 @@ def do_train(
                 score, feat, _ = model(
                     img, label=target, cam_label=target_cam, view_label=target_view
                 )
+                print("doing loss")
                 loss = loss_fn(score, feat, target, target_cam)
 
             scaler.scale(loss).backward()

@@ -4,7 +4,11 @@ from torch.utils.data import DataLoader
 
 from .bases import ImageDataset
 from timm.data.random_erasing import RandomErasing
-from .sampler import RandomIdentitySampler, RandomIdentitySampler_IdUniform
+from .sampler import (
+    RandomIdentitySampler,
+    RandomIdentitySampler_IdUniform,
+    RandomSessionSampler,
+)
 from .market1501 import Market1501
 from .msmt17 import MSMT17
 from .sampler_ddp import RandomIdentitySampler_DDP
@@ -69,15 +73,23 @@ def make_dataloader(cfg):
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
 
-    train_datasets = [
-        FlowstatePurchased(
+    train_datasets = []
+    pid_offset = 0
+    sid_offset = 0
+    # make sure to increment pid and sid so there isn't overlap between datasets
+    for dataset_name in sorted(cfg.DATASETS.TRAIN_NAMES):
+        dataset = FlowstatePurchased(
             root=cfg.DATASETS.ROOT_DIR,
             dataset_name=dataset_name,
             include_val=False,
             train_limit=cfg.DATASETS.TRAIN_LIMIT,
+            pid_offset=pid_offset,
+            sid_offset=sid_offset,
         )
-        for dataset_name in sorted(cfg.DATASETS.TRAIN_NAMES)
-    ]
+        pid_offset += dataset.num_train_pids
+        sid_offset += dataset.num_train_vids
+        train_datasets.append(dataset)
+
     # concatenate all dataset.train together not using torch
     full_train = list(chain.from_iterable(dataset.train for dataset in train_datasets))
     train_set = ImageDataset(full_train, train_transforms)
@@ -105,15 +117,25 @@ def make_dataloader(cfg):
                 pin_memory=True,
             )
         else:
+
             train_loader = DataLoader(
                 train_set,
                 batch_size=cfg.SOLVER.IMS_PER_BATCH,
-                sampler=RandomIdentitySampler(
+                sampler=RandomSessionSampler(
                     full_train, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE
                 ),
                 num_workers=num_workers,
                 collate_fn=train_collate_fn,
             )
+            # train_loader = DataLoader(
+            #     train_set,
+            #     batch_size=cfg.SOLVER.IMS_PER_BATCH,
+            #     sampler=RandomIdentitySampler(
+            #         full_train, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE
+            #     ),
+            #     num_workers=num_workers,
+            #     collate_fn=train_collate_fn,
+            # )
     elif cfg.DATALOADER.SAMPLER == "softmax":
         print("using softmax sampler")
         train_loader = DataLoader(

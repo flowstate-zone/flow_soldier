@@ -5,6 +5,65 @@ import torch
 import random
 import numpy as np
 
+
+class RandomSessionSampler(Sampler):
+    """
+    Randomly resample the datasource but keep sessions together
+    Args:
+    - data_source (list): list of (img_path, pid, camid).
+    - batch_size (int): number of examples in a batch.
+    """
+
+    def __init__(self, data_source, batch_size, num_instances):
+        self.data_source = data_source
+        self.batch_size = batch_size
+        self.num_instances = num_instances
+        # estimate number of examples in an epoch
+        self.length = len(self.data_source) - len(self.data_source) % self.batch_size
+        self.index_dic = batch_idxs_dict = defaultdict(
+            lambda: defaultdict(list)
+        )  # dict with list value
+        # {783: [0, 5, 116, 876, 1554, 2041],...,}
+        for index, (_, pid, _, sid) in enumerate(self.data_source):
+            self.index_dic[sid][pid].append(index)
+        self.sids = list(self.index_dic.keys())
+
+    def __iter__(self):
+        batch_idxs_dict = defaultdict(lambda: defaultdict(list))
+
+        for sid in self.sids:
+            for pid in self.index_dic[sid].keys():
+                idxs = copy.deepcopy(self.index_dic[sid][pid])
+                if len(idxs) < self.num_instances:
+                    idxs = np.random.choice(idxs, size=self.num_instances, replace=True)
+                random.shuffle(idxs)
+                batch_idxs = []
+                for idx in idxs:
+                    batch_idxs.append(idx)
+                    if len(batch_idxs) == self.num_instances:
+                        batch_idxs_dict[sid][pid].append(batch_idxs)
+                        batch_idxs = []
+
+        final_idxs = []
+
+        while len(batch_idxs_dict.keys()) > 0:
+            avail_sids = list(batch_idxs_dict.keys())
+            selected_sid = random.choice(avail_sids)
+            avail_pids = list(batch_idxs_dict[selected_sid].keys())
+            for pid in avail_pids:
+                batch_idxs = batch_idxs_dict[selected_sid][pid].pop(0)
+                final_idxs.extend(batch_idxs)
+                if len(batch_idxs_dict[selected_sid][pid]) == 0:
+                    batch_idxs_dict[selected_sid].pop(pid)
+                if len(batch_idxs_dict[selected_sid]) == 0:
+                    batch_idxs_dict.pop(selected_sid)
+
+        return iter(final_idxs)
+
+    def __len__(self):
+        return self.length
+
+
 class RandomIdentitySampler(Sampler):
     """
     Randomly sample N identities, then for each identity,
@@ -20,8 +79,8 @@ class RandomIdentitySampler(Sampler):
         self.batch_size = batch_size
         self.num_instances = num_instances
         self.num_pids_per_batch = self.batch_size // self.num_instances
-        self.index_dic = defaultdict(list) #dict with list value
-        #{783: [0, 5, 116, 876, 1554, 2041],...,}
+        self.index_dic = defaultdict(list)  # dict with list value
+        # {783: [0, 5, 116, 876, 1554, 2041],...,}
         for index, (_, pid, _, _) in enumerate(self.data_source):
             self.index_dic[pid].append(index)
         self.pids = list(self.index_dic.keys())
@@ -66,6 +125,7 @@ class RandomIdentitySampler(Sampler):
     def __len__(self):
         return self.length
 
+
 # New add by gu
 class RandomIdentitySampler_IdUniform(Sampler):
     """
@@ -78,6 +138,7 @@ class RandomIdentitySampler_IdUniform(Sampler):
         data_source (Dataset): dataset to sample from.
         num_instances (int): number of instances per identity.
     """
+
     def __init__(self, data_source, num_instances):
         self.data_source = data_source
         self.num_instances = num_instances

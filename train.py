@@ -91,7 +91,7 @@ if __name__ == "__main__":
     if cfg.MODEL.RESUME != "":
         logger.info(f"Resuming from {cfg.MODEL.RESUME}")
         model.load_param(cfg.MODEL.RESUME)
-
+    print(f"num_classes:{num_classes}")
     loss_func, center_criterion = make_loss(cfg, num_classes=num_classes)
     optimizer, optimizer_center = make_optimizer(cfg, model, center_criterion)
 
