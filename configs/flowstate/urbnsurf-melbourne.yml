@@ -22,13 +22,13 @@ INPUT:
 DATASETS:
   TRAIN_NAMES: ["urbnsurf-melbourne_left", "urbnsurf-melbourne_right"]
   VAL_NAMES: ["urbnsurf-melbourne_left", "urbnsurf-melbourne_right"]
-  TRAIN_LIMIT: 20
-  VAL_LIMIT: 10
+  TRAIN_LIMIT: 500
+  VAL_LIMIT: 60
   ROOT_DIR: ('/home/ubuntu/Code/model-training/clustering/soldier_data')
 
 DATALOADER:
   SAMPLER: "softmax_triplet"
-  NUM_INSTANCE: 4
+  NUM_INSTANCE: 16
   NUM_WORKERS: 8
 
 SOLVER:

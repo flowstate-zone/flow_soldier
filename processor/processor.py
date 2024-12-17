@@ -51,17 +51,20 @@ def do_train(
         loss_meter.reset()
         acc_meter.reset()
         model.train()
-        print("len(train_loader)", len(train_loader))
-        print("train_loader", train_loader)
-        print("doing epoch", epoch)
         for n_iter, (img, vid, target_cam, target_view) in enumerate(train_loader):
-            print("n_iter", n_iter)
-            print("vid", vid)
-            print("target_cam", target_cam)
-            print("target_view", target_view)
+            vid_local = vid.numpy()
+            if len(set(vid_local)) == 1:
+                logger.info("Skip batch, only one class")
+                continue
+            # if len(vid_local) < cfg.SOLVER.IMS_PER_BATCH:
+            #     logger.info(
+            #         f"Skip batch, batch size {len(vid_local)} less than cfg.SOLVER.IMS_PER_BATCH {cfg.SOLVER.IMS_PER_BATCH}"
+            #     )
+            #     continue
             optimizer.zero_grad()
             optimizer_center.zero_grad()
             img = img.to(device)
+
             target = vid.to(device)
             target_cam = target_cam.to(device)
             target_view = target_view.to(device)
@@ -69,7 +72,6 @@ def do_train(
                 score, feat, _ = model(
                     img, label=target, cam_label=target_cam, view_label=target_view
                 )
-                print("doing loss")
                 loss = loss_fn(score, feat, target, target_cam)
 
             scaler.scale(loss).backward()

@@ -66,13 +66,11 @@ def hard_example_mining(dist_mat, labels, return_inds=False):
       thus we can cope with all anchors in parallel.
     """
 
-    print("dist_mat", dist_mat.shape)
-    print("labels", labels.shape)
     # count how many examples of each lable are there
-    counts = defaultdict(int)
-    for label in labels:
-        counts[label.item()] += 1
-    print("counts", counts)
+    # counts = defaultdict(int)
+    # for label in labels:
+    #     counts[label.item()] += 1
+    # print("counts", counts)
 
     assert len(dist_mat.size()) == 2
     assert dist_mat.size(0) == dist_mat.size(1)
@@ -81,7 +79,6 @@ def hard_example_mining(dist_mat, labels, return_inds=False):
     # shape [N, N]
     is_pos = labels.expand(N, N).eq(labels.expand(N, N).t())
     is_neg = labels.expand(N, N).ne(labels.expand(N, N).t())
-    print("dist_mat[is_pos].shape:", dist_mat[is_pos].shape)
     # `dist_ap` means distance(anchor, positive)
     # both `dist_ap` and `relative_p_inds` with shape [N, 1]
     dist_ap, relative_p_inds = torch.max(
@@ -138,9 +135,7 @@ class TripletLoss(object):
     def __call__(self, global_feat, labels, normalize_feature=False):
         if normalize_feature:
             global_feat = normalize(global_feat, axis=-1)
-        print("global_feat", global_feat.shape)
         dist_mat = euclidean_dist(global_feat, global_feat)
-        print("dist_mat", dist_mat.shape)
         dist_ap, dist_an = hard_example_mining(dist_mat, labels)
 
         #  dist_ap *= (1.0 + self.hard_factor)

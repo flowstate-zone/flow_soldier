@@ -126,6 +126,7 @@ def make_dataloader(cfg):
                 ),
                 num_workers=num_workers,
                 collate_fn=train_collate_fn,
+                drop_last=True,
             )
             # train_loader = DataLoader(
             #     train_set,

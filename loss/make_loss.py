@@ -42,9 +42,6 @@ def make_loss(cfg, num_classes):  # modified by gu
     elif "triplet" in sampler:
 
         def loss_func(score, feat, target, target_cam):
-            print("score", score.shape)
-            print("feat", feat.shape)
-            print("target", target.shape)
 
             if cfg.MODEL.METRIC_LOSS_TYPE == "triplet":
                 if cfg.MODEL.IF_LABELSMOOTH == "on":
