@@ -32,6 +32,38 @@ class CrossEntropyLabelSmooth(nn.Module):
         targets = (1 - self.epsilon) * targets + self.epsilon / self.num_classes
         loss = (- targets * log_probs).mean(0).sum()
         return loss
+    
+    # def forward(self, inputs, targets):
+    #     """
+    #     Args:
+    #         inputs (torch.Tensor): prediction matrix (before softmax) with
+    #             shape (batch_size, num_classes).
+    #         targets (torch.LongTensor): ground truth labels with shape (batch_size).
+    #             Each position contains the label index.
+    #     """
+    #     # get the unique target
+    #     unique_targets = torch.unique(targets)
+    #     # create a dictionary to map unique targets to indices
+    #     unique_targets = sorted(unique_targets)
+    #     target_to_index = {target.item(): i for i, target in enumerate(unique_targets)}
+    #     print('target_to_index:', target_to_index)
+
+    #     # update inputs and targets
+    #     targets = torch.tensor([target_to_index[target.item()] for target in targets])
+    #     inputs = inputs[:, unique_targets]
+
+    #     log_probs = self.logsoftmax(inputs)
+    #     zeros = torch.zeros(log_probs.size())
+        
+    #     # print('before')
+    #     # import pdb; pdb.set_trace()
+    #     targets = zeros.scatter_(1, targets.unsqueeze(1).data.cpu(), 1)
+    #     # print('after')
+    #     if self.use_gpu:
+    #         targets = targets.cuda()
+    #     targets = (1 - self.eps) * targets + self.eps / self.num_classes
+    #     return (-targets * log_probs).mean(0).sum()
+
 
 class LabelSmoothingCrossEntropy(nn.Module):
     """

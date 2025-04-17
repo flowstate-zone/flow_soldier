@@ -61,6 +61,14 @@ def do_train(
             #         f"Skip batch, batch size {len(vid_local)} less than cfg.SOLVER.IMS_PER_BATCH {cfg.SOLVER.IMS_PER_BATCH}"
             #     )
             #     continue
+
+            # if n_iter > 500:
+                # break
+
+            # print unique views
+            # unique_views = np.unique(target_view.numpy())
+            # print(f"Unique views in batch: {unique_views}")
+
             optimizer.zero_grad()
             optimizer_center.zero_grad()
             img = img.to(device)

@@ -12,7 +12,7 @@ from .sampler import (
 from .market1501 import Market1501
 from .msmt17 import MSMT17
 from .sampler_ddp import RandomIdentitySampler_DDP
-from .flowstate_purchased import FlowstatePurchased
+from .flowstate_purchased import FlowstatePurchased, FlowstateSessions
 import torch.distributed as dist
 from itertools import chain
 from .mm import MM
@@ -22,6 +22,7 @@ __factory = {
     "msmt17": MSMT17,
     "mm": MM,
     "flowstate_purchased": FlowstatePurchased,
+    "flowstate_sessions": FlowstateSessions,   
 }
 
 
@@ -78,7 +79,15 @@ def make_dataloader(cfg):
     sid_offset = 0
     # make sure to increment pid and sid so there isn't overlap between datasets
     for dataset_name in sorted(cfg.DATASETS.TRAIN_NAMES):
-        dataset = FlowstatePurchased(
+        # dataset = FlowstatePurchased(
+        #     root=cfg.DATASETS.ROOT_DIR,
+        #     dataset_name=dataset_name,
+        #     include_val=False,
+        #     train_limit=cfg.DATASETS.TRAIN_LIMIT,
+        #     pid_offset=pid_offset,
+        #     sid_offset=sid_offset,
+        # )
+        dataset = FlowstateSessions(
             root=cfg.DATASETS.ROOT_DIR,
             dataset_name=dataset_name,
             include_val=False,
@@ -167,7 +176,13 @@ def make_dataloader(cfg):
 
     val_loaders = []
     for dataset_name in sorted(cfg.DATASETS.VAL_NAMES):
-        val_dataset = FlowstatePurchased(
+        # val_dataset = FlowstatePurchased(
+        #     root=cfg.DATASETS.ROOT_DIR,
+        #     dataset_name=dataset_name,
+        #     include_train=False,
+        #     val_limit=cfg.DATASETS.VAL_LIMIT,
+        # )
+        val_dataset = FlowstateSessions(
             root=cfg.DATASETS.ROOT_DIR,
             dataset_name=dataset_name,
             include_train=False,
