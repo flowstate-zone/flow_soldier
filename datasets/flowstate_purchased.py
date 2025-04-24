@@ -248,7 +248,7 @@ class FlowstateSessions(BaseImageDataset):
 
             return group
 
-        print(sorted(sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*'))))
+        # print(sorted(sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/person*.jpg'))))
         files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/person*.jpg'))
         # files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/*/*/person*.jpg'))
 
