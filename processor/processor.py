@@ -165,12 +165,25 @@ def do_train(
                         ),
                     )
             else:
+                # save checkpoint
                 torch.save(
                     model.state_dict(),
                     os.path.join(
                         cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
                     ),
                 )
+                # save the latest checkpoint
+                torch.save(
+                    model.state_dict(),
+                    os.path.join(
+                        cfg.OUTPUT_DIR, "last.pth"
+                    ),
+                )
+                # print all files in the output dir
+                logger.info("All files in the output dir:")
+                for root, dirs, files in os.walk(cfg.OUTPUT_DIR):
+                    for file in files:
+                        logger.info(os.path.join(root, file))
 
         if epoch % eval_period == 0:
             if cfg.MODEL.DIST_TRAIN:
