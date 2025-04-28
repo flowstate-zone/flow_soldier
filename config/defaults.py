@@ -209,3 +209,4 @@ _C.TEST.EVAL = False
 _C.OUTPUT_DIR = ""
 _C.S3_BUCKET = "sagemaker-ap-southeast-2-431303657118"
 _C.S3_OUTPUT_DIR = "flow_soldier_training"
+_C.S3_PRETRAINED = "reid-data/checkpoint_tea.pth"
