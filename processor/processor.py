@@ -177,8 +177,8 @@ def do_train(
                     ),
                 )
                 # cp to s3
-                s3.upload_file(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)), bucket, os.path.join(s3_output_dir, cfg.MODEL.NAME + "_{}.pth".format(epoch)))
-
+                # s3.upload_file(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)), bucket, os.path.join(s3_output_dir, cfg.MODEL.NAME + "_{}.pth".format(epoch)))
+                
                 # save the latest checkpoint
                 torch.save(
                     model.state_dict(),
