@@ -22,6 +22,7 @@ def do_train(
     scheduler,
     loss_fn,
     local_rank,
+    wandb_logger=None,
 ):
     log_period = cfg.SOLVER.LOG_PERIOD
     checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
@@ -239,10 +240,14 @@ def do_train(
                     cmc, mAP, _, _, _, _, _ = evaluator.compute()
                     logger.info("Validation Results - Epoch: {}".format(epoch))
                     logger.info("mAP: {:.1%}".format(mAP))
+                    if wandb_logger is not None:
+                        wandb_logger.log({'val/mAP': mAP})
                     for r in [1, 5, 10]:
                         logger.info(
                             "CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1])
                         )
+                        if wandb_logger is not None:
+                            wandb_logger.log({f'val/Rank-{r}': cmc[r - 1]})
                     torch.cuda.empty_cache()
 
 
