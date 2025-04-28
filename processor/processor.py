@@ -142,6 +142,16 @@ def do_train(
                         )
                     )
 
+                    # log to wandb
+                    if wandb_logger is not None:
+                        wandb_logger.log(
+                            {
+                                "train/loss": loss_meter.avg,
+                                "train/acc": acc_meter.avg,
+                                "train/lr": base_lr,
+                            }
+                        )
+
         end_time = time.time()
         time_per_batch = (end_time - start_time) / (n_iter + 1)
         if cfg.SOLVER.WARMUP_METHOD == "cosine":
@@ -186,11 +196,11 @@ def do_train(
                         cfg.OUTPUT_DIR, "last.pth"
                     ),
                 )
-                # print all files in the output dir
-                logger.info("All files in the output dir:")
-                for root, dirs, files in os.walk(cfg.OUTPUT_DIR):
-                    for file in files:
-                        logger.info(os.path.join(root, file))
+                # # print all files in the output dir
+                # logger.info("All files in the output dir:")
+                # for root, dirs, files in os.walk(cfg.OUTPUT_DIR):
+                #     for file in files:
+                #         logger.info(os.path.join(root, file))
 
         if epoch % eval_period == 0:
             if cfg.MODEL.DIST_TRAIN:
@@ -261,13 +271,13 @@ def do_train(
                     logger.info("Validation Results - Epoch: {}".format(epoch))
                     logger.info("mAP: {:.1%}".format(mAP))
                     if wandb_logger is not None:
-                        wandb_logger.log({'val/mAP': mAP})
+                        wandb_logger.log({f'val/{name}/mAP': mAP})
                     for r in [1, 5, 10]:
                         logger.info(
                             "CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1])
                         )
                         if wandb_logger is not None:
-                            wandb_logger.log({f'val/Rank-{r}': cmc[r - 1]})
+                            wandb_logger.log({f'val/{name}/Rank-{r}': cmc[r - 1]})
                     torch.cuda.empty_cache()
 
 
