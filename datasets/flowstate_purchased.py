@@ -248,8 +248,8 @@ class FlowstateSessions(BaseImageDataset):
 
             return group
 
-        files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/person*.jpg'))
-        # files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/*/*/person*.jpg'))
+        # files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/person*.jpg'))
+        files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/*/*/person*.jpg'))
 
         data = pd.DataFrame(files, columns=['img_path'])
         data['wave'] = data.img_path.apply(lambda x: x.split('/')[-2])
