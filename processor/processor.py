@@ -187,8 +187,12 @@ def do_train(
                     ),
                 )
                 # cp log file to s3
+                # get the name of the file in cfg.OUTPUT_DIR that ends in .txt
+                log_files = [
+                    f for f in os.listdir(cfg.OUTPUT_DIR) if f.endswith(".txt")
+                ]
                 if bucket is not None:
-                    s3.upload_file(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + ".txt".format(epoch)), bucket, os.path.join(s3_output_dir, cfg.MODEL.NAME + "_{}.pth".format(epoch)))
+                    s3.upload_file(os.path.join(cfg.OUTPUT_DIR, log_files[0]), bucket, os.path.join(s3_output_dir, log_files[0]))
                 
                 # save the latest checkpoint
                 torch.save(
