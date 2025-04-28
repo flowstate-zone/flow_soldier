@@ -207,3 +207,5 @@ _C.TEST.EVAL = False
 # ---------------------------------------------------------------------------- #
 # Path to checkpoint and saved log of trained model
 _C.OUTPUT_DIR = ""
+_C.S3_BUCKET = "sagemaker-ap-southeast-2-431303657118"
+_C.S3_OUTPUT_DIR = "flow_soldier_training"

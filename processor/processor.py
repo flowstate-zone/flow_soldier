@@ -9,6 +9,7 @@ from utils.meter import AverageMeter
 from utils.metrics import R1_mAP_eval
 from torch.cuda import amp
 import torch.distributed as dist
+import boto3
 
 
 def do_train(
@@ -23,6 +24,8 @@ def do_train(
     loss_fn,
     local_rank,
     wandb_logger=None,
+    bucket=None,
+    s3_output_dir=None,
 ):
     log_period = cfg.SOLVER.LOG_PERIOD
     checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
@@ -30,6 +33,7 @@ def do_train(
 
     device = "cuda"
     epochs = cfg.SOLVER.MAX_EPOCHS
+    s3 = boto3.client('s3')
 
     logger = logging.getLogger("transreid.train")
     logger.info("start training")
@@ -172,6 +176,9 @@ def do_train(
                         cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
                     ),
                 )
+                # cp to s3
+                s3.upload_file(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)), bucket, os.path.join(s3_output_dir, cfg.MODEL.NAME + "_{}.pth".format(epoch)))
+
                 # save the latest checkpoint
                 torch.save(
                     model.state_dict(),
