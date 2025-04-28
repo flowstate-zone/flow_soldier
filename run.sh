@@ -5,7 +5,7 @@
 # CUDA_VISIBLE_DEVICES=0 CUDA_LAUNCH_BLOCKING=1 python train.py --config_file configs/flowstate/urbnsurf-melbourne.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/swin_small.pth'  OUTPUT_DIR './log/flowstate/urbnsurf-melbourne'
 # CUDA_VISIBLE_DEVICES=0 CUDA_LAUNCH_BLOCKING=1 python train.py --config_file configs/flowstate/surftown-munich.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/swin_small.pth'  OUTPUT_DIR './log/flowstate/surftown-munich'
 # CUDA_VISIBLE_DEVICES=0 CUDA_LAUNCH_BLOCKING=1 python train.py --config_file configs/flowstate/all.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/swin_small.pth'  OUTPUT_DIR './log/flowstate/all'
-CUDA_VISIBLE_DEVICES=0 CUDA_LAUNCH_BLOCKING=1 python train.py --config_file configs/flowstate/surftown-munich_sessions.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/swin_small.pth'  OUTPUT_DIR './log/flowstate/surftown-munich_sessions-masked'
+CUDA_VISIBLE_DEVICES=0 CUDA_LAUNCH_BLOCKING=1 python train.py --config_file configs/flowstate/surftown-munich_sessions.yml MODEL.PRETRAIN_CHOICE 'self' MODEL.PRETRAIN_PATH './log/checkpoint_tea.pth'  OUTPUT_DIR './log/flowstate/surftown-munich_sessions-masked-pre-trained'
 
 
 # Swin Small# './log/swin_small_tea.pth'

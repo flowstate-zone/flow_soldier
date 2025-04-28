@@ -186,8 +186,9 @@ def do_train(
                         cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
                     ),
                 )
-                # cp to s3
-                # s3.upload_file(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)), bucket, os.path.join(s3_output_dir, cfg.MODEL.NAME + "_{}.pth".format(epoch)))
+                # cp log file to s3
+                if bucket is not None:
+                    s3.upload_file(os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + ".txt".format(epoch)), bucket, os.path.join(s3_output_dir, cfg.MODEL.NAME + "_{}.pth".format(epoch)))
                 
                 # save the latest checkpoint
                 torch.save(
