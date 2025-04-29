@@ -180,12 +180,12 @@ def do_train(
                     )
             else:
                 # save checkpoint
-                torch.save(
-                    model.state_dict(),
-                    os.path.join(
-                        cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
-                    ),
-                )
+                # torch.save(
+                #     model.state_dict(),
+                #     os.path.join(
+                #         cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
+                #     ),
+                # )
                 # cp log file to s3
                 # get the name of the file in cfg.OUTPUT_DIR that ends in .txt
                 log_files = [
@@ -195,12 +195,33 @@ def do_train(
                     s3.upload_file(os.path.join(cfg.OUTPUT_DIR, log_files[0]), bucket, os.path.join(s3_output_dir, log_files[0]))
                 
                 # save the latest checkpoint
+                # torch.save(
+                #     model.state_dict(),
+                #     os.path.join(
+                #         cfg.OUTPUT_DIR, "last.pth"
+                #     ),
+                # )
+
+                checkpoint = {
+                    "epoch": epoch,
+                    "model": model.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "scheduler": scheduler.state_dict(),
+                }
                 torch.save(
-                    model.state_dict(),
+                    checkpoint,
+                    os.path.join(
+                        cfg.OUTPUT_DIR, "checkpoint_{}.pth".format(epoch)
+                    ),
+                )
+                # and save as last
+                torch.save(
+                    checkpoint,
                     os.path.join(
                         cfg.OUTPUT_DIR, "last.pth"
                     ),
                 )
+
                 # # print all files in the output dir
                 # logger.info("All files in the output dir:")
                 # for root, dirs, files in os.walk(cfg.OUTPUT_DIR):
