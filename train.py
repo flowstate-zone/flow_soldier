@@ -136,5 +136,5 @@ if __name__ == "__main__":
         scheduler,
         loss_func,
         args.local_rank,
-        start_epoch=checkpoint['epoch'] if pretrained != "" else 0,
+        # start_epoch=checkpoint['epoch'] if pretrained != "" else 0,
     )
