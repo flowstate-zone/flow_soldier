@@ -88,9 +88,20 @@ if __name__ == "__main__":
         view_num=view_num,
         semantic_weight=cfg.MODEL.SEMANTIC_WEIGHT,
     )
+
     if cfg.MODEL.RESUME != "":
         logger.info(f"Resuming from {cfg.MODEL.RESUME}")
         model.load_param(cfg.MODEL.RESUME)
+
+    # pretrained = '/home/ubuntu/Code/flow_soldier/last.pth'
+    # print(pretrained)
+    # if pretrained != "":
+    #     logger.info(f"Resuming from {pretrained}")
+    #     checkpoint = torch.load(pretrained, weights_only=True, map_location='cuda')
+    #     model.load_state_dict(checkpoint['model'], strict=False)
+    #     if cfg.MODEL.DEVICE_ID != -1:
+    #         model = model.cuda()
+
     print(f"num_classes:{num_classes}")
     loss_func, center_criterion = make_loss(cfg, num_classes=num_classes)
     optimizer, optimizer_center = make_optimizer(cfg, model, center_criterion)
@@ -109,6 +120,11 @@ if __name__ == "__main__":
             cfg.SOLVER.WARMUP_METHOD,
         )
 
+    # if pretrained != "":
+    #     optimizer.load_state_dict(checkpoint['optimizer'])
+    #     scheduler.load_state_dict(checkpoint['scheduler'])
+    #     scheduler.step(checkpoint['epoch'])
+
     do_train(
         cfg,
         model,
@@ -120,4 +136,5 @@ if __name__ == "__main__":
         scheduler,
         loss_func,
         args.local_rank,
+        start_epoch=checkpoint['epoch'] if pretrained != "" else 0,
     )

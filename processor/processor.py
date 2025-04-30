@@ -26,6 +26,7 @@ def do_train(
     wandb_logger=None,
     bucket=None,
     s3_output_dir=None,
+    start_epoch=0
 ):
     log_period = cfg.SOLVER.LOG_PERIOD
     checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
@@ -51,7 +52,8 @@ def do_train(
 
     scaler = amp.GradScaler()
     # train
-    for epoch in range(1, epochs + 1):
+    for ep in range(1, epochs + 1):
+        epoch = ep + start_epoch
         start_time = time.time()
         loss_meter.reset()
         acc_meter.reset()
@@ -126,11 +128,12 @@ def do_train(
                         )
             else:
                 if (n_iter + 1) % log_period == 0:
-                    base_lr = (
-                        scheduler._get_lr(epoch)[0]
-                        if cfg.SOLVER.WARMUP_METHOD == "cosine"
-                        else scheduler.get_lr()[0]
-                    )
+                    # base_lr = (
+                    #     scheduler._get_lr(epoch)[0]
+                    #     if cfg.SOLVER.WARMUP_METHOD == "cosine"
+                    #     else scheduler.get_lr()[0]
+                    # )
+                    base_lr = optimizer.param_groups[0]['lr']
                     logger.info(
                         "Epoch[{}] Iter[{}/{}] Loss: {:.3f}, Acc: {:.3f}, Base Lr: {:.2e}".format(
                             epoch,
