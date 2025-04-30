@@ -7,6 +7,7 @@ import random
 import logging
 import math
 import pandas as pd
+import zlib
 
 logger = logging.getLogger("transreid.train")
 
@@ -234,7 +235,9 @@ class FlowstateSessions(BaseImageDataset):
                 return None
             
             # put 5% of sessions into the test set
-            if hash(group.person.values[0]) % 20 == 0:
+            # if hash(group.person.values[0]) % 20 == 0:
+            # print(zlib.adler32(group.person.values[0].encode()))
+            if zlib.adler32(group.person.values[0].encode()) % 10 == 0:
                 group = group.sample(frac=0.25).copy()
                 n_records = len(group)
                 n_gallery = math.floor(n_records * 0.6)
