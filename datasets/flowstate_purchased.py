@@ -224,6 +224,7 @@ class FlowstateSessions(BaseImageDataset):
     ):
         super(FlowstateSessions, self).__init__()
         self.dataset_dir = osp.join(root, dataset_name)
+
         logger.info(f"Loading {dataset_name} from {self.dataset_dir}")        
 
         # self._check_before_run()
@@ -237,7 +238,7 @@ class FlowstateSessions(BaseImageDataset):
             # put 5% of sessions into the test set
             # if hash(group.person.values[0]) % 20 == 0:
             # print(zlib.adler32(group.person.values[0].encode()))
-            if zlib.adler32(group.person.values[0].encode()) % 18 == 0:
+            if zlib.adler32(group.session.values[0].encode()) % 6 == 0:
                 group = group.sample(frac=0.25).copy()
                 n_records = len(group)
                 n_gallery = math.floor(n_records * 0.6)
@@ -251,9 +252,11 @@ class FlowstateSessions(BaseImageDataset):
 
             return group
 
-        files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/person*.jpg'))
+        files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/person*.jpg'))
         if not files:
-            files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/*/*/person*.jpg'))
+            files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/person*.jpg'))
+            if not files:
+                files = sorted(glob.glob(f'{self.dataset_dir}/*/*/*/*/*/*/person*.jpg'))
 
         data = pd.DataFrame(files, columns=['img_path'])
         data['wave'] = data.img_path.apply(lambda x: x.split('/')[-2])
