@@ -238,6 +238,7 @@ class FlowstateSessions(BaseImageDataset):
             # put 5% of sessions into the test set
             # if hash(group.person.values[0]) % 20 == 0:
             # print(zlib.adler32(group.person.values[0].encode()))
+            # print(group.session.values[0])
             if zlib.adler32(group.session.values[0].encode()) % 6 == 0:
                 group = group.sample(frac=0.25).copy()
                 n_records = len(group)

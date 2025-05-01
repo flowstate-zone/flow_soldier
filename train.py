@@ -72,7 +72,7 @@ def get_reviewed_dataset(cfg):
                 # download the zip
                 my_bucket.download_file(session['zip'], os.path.join(cfg.DATASETS.ROOT_DIR.replace('train', 'test'), session['zip'].split('/')[-1]))
                 # extract the zip
-                os.system('tar -xzf {} -C {}'.format(os.path.join(cfg.DATASETS.ROOT_DIR.replace('train', 'test'), session['zip'].split('/')[-1]), os.path.join(cfg.DATASETS.ROOT_DIR, pool_slug,session_type, session_name)))
+                os.system('tar -xzf {} -C {}'.format(os.path.join(cfg.DATASETS.ROOT_DIR.replace('train', 'test'), session['zip'].split('/')[-1]), os.path.join(cfg.DATASETS.ROOT_DIR.replace('train', 'test'), pool_slug,session_type, session_name)))
         
         for session in train_sessions:
             if session['pool_slug'] == pool_slug and session['session_type'] == session_type:
@@ -119,7 +119,8 @@ if __name__ == "__main__":
     cfg.freeze()
     set_seed(cfg.SOLVER.SEED)
 
-    # get_reviewed_dataset(cfg)
+    # pull the reviewed data and structure it for training
+    get_reviewed_dataset(cfg)
 
     if cfg.MODEL.DIST_TRAIN:
         torch.cuda.set_device(args.local_rank)
