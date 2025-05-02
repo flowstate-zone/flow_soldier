@@ -9,6 +9,7 @@ from utils.meter import AverageMeter
 from utils.metrics import R1_mAP_eval
 from torch.cuda import amp
 import torch.distributed as dist
+import boto3
 
 
 def do_train(
@@ -22,6 +23,10 @@ def do_train(
     scheduler,
     loss_fn,
     local_rank,
+    wandb_logger=None,
+    bucket=None,
+    s3_output_dir=None,
+    start_epoch=0
 ):
     log_period = cfg.SOLVER.LOG_PERIOD
     checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
@@ -29,6 +34,7 @@ def do_train(
 
     device = "cuda"
     epochs = cfg.SOLVER.MAX_EPOCHS
+    s3 = boto3.client('s3')
 
     logger = logging.getLogger("transreid.train")
     logger.info("start training")
@@ -46,7 +52,8 @@ def do_train(
 
     scaler = amp.GradScaler()
     # train
-    for epoch in range(1, epochs + 1):
+    for ep in range(1, epochs + 1):
+        epoch = ep + start_epoch
         start_time = time.time()
         loss_meter.reset()
         acc_meter.reset()
@@ -61,6 +68,14 @@ def do_train(
             #         f"Skip batch, batch size {len(vid_local)} less than cfg.SOLVER.IMS_PER_BATCH {cfg.SOLVER.IMS_PER_BATCH}"
             #     )
             #     continue
+
+            # if n_iter > 500:
+                # break
+
+            # print unique views
+            # unique_views = np.unique(target_view.numpy())
+            # print(f"Unique views in batch: {unique_views}")
+
             optimizer.zero_grad()
             optimizer_center.zero_grad()
             img = img.to(device)
@@ -113,11 +128,12 @@ def do_train(
                         )
             else:
                 if (n_iter + 1) % log_period == 0:
-                    base_lr = (
-                        scheduler._get_lr(epoch)[0]
-                        if cfg.SOLVER.WARMUP_METHOD == "cosine"
-                        else scheduler.get_lr()[0]
-                    )
+                    # base_lr = (
+                    #     scheduler._get_lr(epoch)[0]
+                    #     if cfg.SOLVER.WARMUP_METHOD == "cosine"
+                    #     else scheduler.get_lr()[0]
+                    # )
+                    base_lr = optimizer.param_groups[0]['lr']
                     logger.info(
                         "Epoch[{}] Iter[{}/{}] Loss: {:.3f}, Acc: {:.3f}, Base Lr: {:.2e}".format(
                             epoch,
@@ -128,6 +144,16 @@ def do_train(
                             base_lr,
                         )
                     )
+
+                    # log to wandb
+                    if wandb_logger is not None:
+                        wandb_logger.log(
+                            {
+                                "train/loss": loss_meter.avg,
+                                "train/acc": acc_meter.avg,
+                                "train/lr": base_lr,
+                            }
+                        )
 
         end_time = time.time()
         time_per_batch = (end_time - start_time) / (n_iter + 1)
@@ -156,12 +182,54 @@ def do_train(
                         ),
                     )
             else:
+                # save checkpoint
+                # torch.save(
+                #     model.state_dict(),
+                #     os.path.join(
+                #         cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
+                #     ),
+                # )
+                # cp log file to s3
+                # get the name of the file in cfg.OUTPUT_DIR that ends in .txt
+                log_files = [
+                    f for f in os.listdir(cfg.OUTPUT_DIR) if f.endswith(".txt")
+                ]
+                if bucket is not None:
+                    s3.upload_file(os.path.join(cfg.OUTPUT_DIR, log_files[0]), bucket, os.path.join(s3_output_dir, log_files[0]))
+                
+                # save the latest checkpoint
+                # torch.save(
+                #     model.state_dict(),
+                #     os.path.join(
+                #         cfg.OUTPUT_DIR, "last.pth"
+                #     ),
+                # )
+
+                checkpoint = {
+                    "epoch": epoch,
+                    "model": model.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "scheduler": scheduler.state_dict(),
+                }
                 torch.save(
-                    model.state_dict(),
+                    checkpoint,
                     os.path.join(
-                        cfg.OUTPUT_DIR, cfg.MODEL.NAME + "_{}.pth".format(epoch)
+                        cfg.OUTPUT_DIR, "checkpoint_{}.pth".format(epoch)
                     ),
                 )
+                # and save as last
+                torch.save(
+                    checkpoint,
+                    os.path.join(
+                        cfg.OUTPUT_DIR, "last.pth"
+                    ),
+                )
+
+                # # print all files in the output dir
+                # logger.info("All files in the output dir:")
+                # for root, dirs, files in os.walk(cfg.OUTPUT_DIR):
+                #     for file in files:
+                #         logger.info(os.path.join(root, file))
 
         if epoch % eval_period == 0:
             if cfg.MODEL.DIST_TRAIN:
@@ -231,10 +299,14 @@ def do_train(
                     cmc, mAP, _, _, _, _, _ = evaluator.compute()
                     logger.info("Validation Results - Epoch: {}".format(epoch))
                     logger.info("mAP: {:.1%}".format(mAP))
+                    if wandb_logger is not None:
+                        wandb_logger.log({f'val/{name}/mAP': mAP})
                     for r in [1, 5, 10]:
                         logger.info(
                             "CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1])
                         )
+                        if wandb_logger is not None:
+                            wandb_logger.log({f'val/{name}/Rank-{r}': cmc[r - 1]})
                     torch.cuda.empty_cache()
 
 

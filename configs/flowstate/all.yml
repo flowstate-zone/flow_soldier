@@ -49,7 +49,7 @@ DATASETS:
     ]
   TRAIN_LIMIT: 4000
   VAL_LIMIT: 300
-  ROOT_DIR: ('/home/ubuntu/Code/model-training/clustering/data')
+  ROOT_DIR: ('/home/ubuntu/Code/model-training/clustering/soldier_data')
 
 DATALOADER:
   SAMPLER: "softmax_triplet"

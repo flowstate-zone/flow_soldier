@@ -20,18 +20,55 @@ class CrossEntropyLabelSmooth(nn.Module):
         self.use_gpu = use_gpu
         self.logsoftmax = nn.LogSoftmax(dim=1)
 
+    # def forward(self, inputs, targets):
+    #     """
+    #     Args:
+    #         inputs: prediction matrix (before softmax) with shape (batch_size, num_classes)
+    #         targets: ground truth labels with shape (num_classes)
+    #     """
+    #     print(inputs.shape)
+    #     log_probs = self.logsoftmax(inputs)
+    #     targets = torch.zeros(log_probs.size()).scatter_(1, targets.unsqueeze(1).data.cpu(), 1)
+    #     if self.use_gpu: targets = targets.cuda()
+    #     targets = (1 - self.epsilon) * targets + self.epsilon / self.num_classes
+    #     loss = (- targets * log_probs).mean(0).sum()
+    #     return loss
+    
     def forward(self, inputs, targets):
         """
         Args:
-            inputs: prediction matrix (before softmax) with shape (batch_size, num_classes)
-            targets: ground truth labels with shape (num_classes)
+            inputs (torch.Tensor): prediction matrix (before softmax) with
+                shape (batch_size, num_classes).
+            targets (torch.LongTensor): ground truth labels with shape (batch_size).
+                Each position contains the label index.
         """
+        # get the unique target
+        unique_targets = torch.unique(targets)
+        # create a dictionary to map unique targets to indices
+        unique_targets = sorted(unique_targets)
+        target_to_index = {target.item(): i for i, target in enumerate(unique_targets)}
+        # print('target_to_index:', target_to_index)
+
+        # print('inputs:', inputs)
+
+        # update inputs and targets
+        targets = torch.tensor([target_to_index[target.item()] for target in targets])
+        inputs = inputs[:, unique_targets]
+
+        # print(inputs.shape)
+
         log_probs = self.logsoftmax(inputs)
-        targets = torch.zeros(log_probs.size()).scatter_(1, targets.unsqueeze(1).data.cpu(), 1)
-        if self.use_gpu: targets = targets.cuda()
+        zeros = torch.zeros(log_probs.size())
+        
+        # print('before')
+        # import pdb; pdb.set_trace()
+        targets = zeros.scatter_(1, targets.unsqueeze(1).data.cpu(), 1)
+        # print('after')
+        if self.use_gpu:
+            targets = targets.cuda()
         targets = (1 - self.epsilon) * targets + self.epsilon / self.num_classes
-        loss = (- targets * log_probs).mean(0).sum()
-        return loss
+        return (-targets * log_probs).mean(0).sum()
+
 
 class LabelSmoothingCrossEntropy(nn.Module):
     """

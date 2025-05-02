@@ -57,7 +57,7 @@ class RandomSessionSampler(Sampler):
                     batch_idxs_dict[selected_sid].pop(pid)
                 if len(batch_idxs_dict[selected_sid]) == 0:
                     batch_idxs_dict.pop(selected_sid)
-
+        
         return iter(final_idxs)
 
     def __len__(self):
