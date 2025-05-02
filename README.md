@@ -1,4 +1,8 @@
-# SOLIDER on [Person Re-identification]
+# Flowstate ReID Repo utilising SOLDIER and TransReID
+
+Minor changes to original repo. Install this repo in python virtual environment to run scripts in model-training.
+
+## SOLIDER on [Person Re-identification]
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/beyond-appearance-a-semantic-controllable/person-re-identification-on-msmt17)](https://paperswithcode.com/sota/person-re-identification-on-msmt17?p=beyond-appearance-a-semantic-controllable)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/beyond-appearance-a-semantic-controllable/person-re-identification-on-market-1501)](https://paperswithcode.com/sota/person-re-identification-on-market-1501?p=beyond-appearance-a-semantic-controllable)
