@@ -240,7 +240,7 @@ class FlowstateSessions(BaseImageDataset):
             # print(zlib.adler32(group.person.values[0].encode()))
             # print(group.session.values[0])
             if zlib.adler32(group.session.values[0].encode()) % 6 == 0:
-                group = group.sample(frac=0.25).copy()
+                group = group.sample(frac=0.1).copy()
                 n_records = len(group)
                 n_gallery = math.floor(n_records * 0.6)
                 n_train = 0
