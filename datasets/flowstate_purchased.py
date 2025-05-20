@@ -248,7 +248,7 @@ class FlowstateSessions(BaseImageDataset):
                 labels = ['train'] * n_train + ['gallery'] * n_gallery + ['query'] * n_query 
                 group['split'] = labels
             else:
-                group = group.sample(frac=0.25).copy()
+                group = group.sample(frac=0.15).copy()
                 group['split'] = 'train'
 
             return group
