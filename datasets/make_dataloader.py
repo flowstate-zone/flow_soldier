@@ -94,6 +94,8 @@ def make_dataloader(cfg):
             train_limit=cfg.DATASETS.TRAIN_LIMIT,
             pid_offset=pid_offset,
             sid_offset=sid_offset,
+            val_keep_frac=cfg.DATASETS.VAL_KEEP_FRAC,
+            train_keep_frac=cfg.DATASETS.TRAIN_KEEP_FRAC,
         )
         pid_offset += dataset.num_train_pids
         sid_offset += dataset.num_train_vids

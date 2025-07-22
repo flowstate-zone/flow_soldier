@@ -220,6 +220,8 @@ class FlowstateSessions(BaseImageDataset):
         val_limit=50,
         pid_offset=0,
         sid_offset=0,
+        val_keep_frac=0.1,
+        train_keep_frac=0.15,
         **kwargs,
     ):
         super(FlowstateSessions, self).__init__()
@@ -229,7 +231,7 @@ class FlowstateSessions(BaseImageDataset):
 
         # self._check_before_run()
         
-        def train_test_split(group):
+        def train_test_split(group, val_keep_frac, train_keep_frac):
             if len(group) < 10:
                 return None
             if '999' in group.person.values[0]:
@@ -240,7 +242,7 @@ class FlowstateSessions(BaseImageDataset):
             # print(zlib.adler32(group.person.values[0].encode()))
             # print(group.session.values[0])
             if zlib.adler32(group.session.values[0].encode()) % 6 == 0:
-                group = group.sample(frac=0.1).copy()
+                group = group.sample(frac=val_keep_frac).copy()
                 n_records = len(group)
                 n_gallery = math.floor(n_records * 0.6)
                 n_train = 0
@@ -248,7 +250,7 @@ class FlowstateSessions(BaseImageDataset):
                 labels = ['train'] * n_train + ['gallery'] * n_gallery + ['query'] * n_query 
                 group['split'] = labels
             else:
-                group = group.sample(frac=0.15).copy()
+                group = group.sample(frac=train_keep_frac).copy()
                 group['split'] = 'train'
 
             return group
@@ -265,7 +267,7 @@ class FlowstateSessions(BaseImageDataset):
         data['person'] = data.img_path.apply(lambda x: x.split('/')[-3])
         data['session'] = data.img_path.apply(lambda x: '_'.join(x.split('/')[-7:-3]))
 
-        group_data = pd.concat([train_test_split(group) for _, group in data.groupby('wave_id')])
+        group_data = pd.concat([train_test_split(group, val_keep_frac, train_keep_frac) for _, group in data.groupby('wave_id')])
         # print(pd.factorize(group_data['session'])[0])
         # print(group_data['session'].unique())
         group_data['dsetid'] = pd.factorize(group_data['session'])[0]
