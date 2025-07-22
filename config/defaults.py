@@ -48,7 +48,6 @@ _C.MODEL.DIST_TRAIN = False
 _C.MODEL.NO_MARGIN = False
 # If train with label smooth, options: 'on', 'off'
 _C.MODEL.IF_LABELSMOOTH = "on"
-# If train with arcface loss, options: 'True', 'False'
 _C.MODEL.COS_LAYER = False
 
 _C.MODEL.DROPOUT_RATE = 0.0
@@ -112,6 +111,8 @@ _C.DATASETS.VAL_LIMIT = None
 _C.DATASETS.ROOT_DIR = "../data"
 _C.DATASETS.ROOT_TRAIN_DIR = "../data"
 _C.DATASETS.ROOT_VAL_DIR = "../data"
+_C.DATASETS.VAL_KEEP_FRAC = 0.1
+_C.DATASETS.TRAIN_KEEP_FRAC = 0.15
 
 
 # -----------------------------------------------------------------------------
