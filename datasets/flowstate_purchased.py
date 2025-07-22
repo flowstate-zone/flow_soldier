@@ -236,7 +236,7 @@ class FlowstateSessions(BaseImageDataset):
                 return None
             if '999' in group.person.values[0]:
                 return None
-            
+
             # put 5% of sessions into the test set
             # if hash(group.person.values[0]) % 20 == 0:
             # print(zlib.adler32(group.person.values[0].encode()))
