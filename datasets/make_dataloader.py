@@ -187,7 +187,7 @@ def make_dataloader(cfg):
         val_dataset = FlowstateSessions(
             root=cfg.DATASETS.ROOT_DIR,
             dataset_name=dataset_name,
-            include_train=False,
+            include_train=True,
             val_limit=cfg.DATASETS.VAL_LIMIT,
             val_keep_frac=cfg.DATASETS.VAL_KEEP_FRAC,
             train_keep_frac=cfg.DATASETS.TRAIN_KEEP_FRAC,
